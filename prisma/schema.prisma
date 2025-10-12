@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model School {
+  id            Int             @id @default(autoincrement())
+  name          String          @unique
+  address       String?
+  administrators Administrator[]
+  subjects      Subject[]
+  specializations Specialization[]
+  teachers      Teacher[]
+  departments   Department[]
+  groups        Group[]
+  rooms         Room[]
+}
+
+model Administrator {
+  id           Int    @id @default(autoincrement())
+  username     String @unique
+  passwordHash String @map("password_hash")
+  school       School @relation(fields: [schoolId], references: [id])
+  schoolId     Int    @map("school_id")
+}
+
+model Department {
+  id       Int    @id @default(autoincrement())
+  name     String @unique
+  school   School @relation(fields: [schoolId], references: [id])
+  schoolId Int    @map("school_id")
+  groups   Group[]
+}
+
+model Subject {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  hourVolume Decimal  @map("hour_volume") @db.Decimal(3,1)
+  school     School   @relation(fields: [schoolId], references: [id])
+  schoolId   Int      @map("school_id")
+  sessions   Session[]
+}
+
+model Specialization {
+  id       Int    @id @default(autoincrement())
+  name     String @unique
+  school   School @relation(fields: [schoolId], references: [id])
+  schoolId Int    @map("school_id")
+  groups   Group[]
+}
+
+model Teacher {
+  id        Int      @id @default(autoincrement())
+  lastName  String?  @map("last_name")
+  firstName String?  @map("first_name")
+  school    School   @relation(fields: [schoolId], references: [id])
+  schoolId  Int      @map("school_id")
+  sessions  Session[]
+}
+
+model Group {
+  id               Int             @id @default(autoincrement())
+  specialization   Specialization?  @relation(fields: [specializationId], references: [id])
+  specializationId Int?             @map("specialization_id")
+  level            String?
+  department       Department?     @relation(fields: [departmentId], references: [id])
+  departmentId     Int?             @map("department_id")
+  school           School          @relation(fields: [schoolId], references: [id])
+  schoolId         Int              @map("school_id")
+  sessions         Session[]
+
+  @@map("group")
+}
+
+model Session {
+  id        Int     @id @default(autoincrement())
+  subject   Subject? @relation(fields: [subjectId], references: [id])
+  subjectId Int?     @map("subject_id")
+  teacher   Teacher? @relation(fields: [teacherId], references: [id])
+  teacherId Int?     @map("teacher_id")
+  group     Group?   @relation(fields: [groupId], references: [id])
+  groupId   Int?     @map("group_id")
+}
+
+model Room {
+  id       Int    @id @default(autoincrement())
+  name     String?
+  capacity Int?
+  school   School @relation(fields: [schoolId], references: [id])
+  schoolId Int    @map("school_id")
+}
+
