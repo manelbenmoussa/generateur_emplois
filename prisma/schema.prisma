@@ -30,7 +30,7 @@ model Administrator {
 
 model Department {
   id       Int    @id @default(autoincrement())
-  name     String @unique
+  name     String 
   school   School @relation(fields: [schoolId], references: [id])
   schoolId Int    @map("school_id")
   groups   Group[]
@@ -38,7 +38,7 @@ model Department {
 
 model Subject {
   id         Int      @id @default(autoincrement())
-  name       String   @unique
+  name       String   
   hourVolume Decimal  @map("hour_volume") @db.Decimal(3,1)
   school     School   @relation(fields: [schoolId], references: [id])
   schoolId   Int      @map("school_id")
@@ -47,7 +47,7 @@ model Subject {
 
 model Specialization {
   id       Int    @id @default(autoincrement())
-  name     String @unique
+  name     String 
   school   School @relation(fields: [schoolId], references: [id])
   schoolId Int    @map("school_id")
   groups   Group[]
