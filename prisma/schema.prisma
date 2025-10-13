@@ -8,16 +8,13 @@ datasource db {
 }
 
 model School {
-  id            Int             @id @default(autoincrement())
-  name          String          @unique
-  address       String?
-  administrators Administrator[]
-  subjects      Subject[]
-  specializations Specialization[]
-  teachers      Teacher[]
-  departments   Department[]
-  groups        Group[]
-  rooms         Room[]
+  id              Int             @id @default(autoincrement())
+  name            String          @unique
+  address         String?
+  administrators  Administrator[]
+  teachers        Teacher[]
+  departments     Department[]
+  rooms           Room[]
 }
 
 model Administrator {
@@ -29,68 +26,108 @@ model Administrator {
 }
 
 model Department {
-  id       Int    @id @default(autoincrement())
-  name     String 
-  school   School @relation(fields: [schoolId], references: [id])
-  schoolId Int    @map("school_id")
-  groups   Group[]
+  id             Int             @id @default(autoincrement())
+  name           String 
+  school         School          @relation(fields: [schoolId], references: [id])
+  schoolId       Int             @map("school_id")
+  subjects       Subject[]
+  specializations Specialization[]
+  rooms          Room[]
 }
 
 model Subject {
-  id         Int      @id @default(autoincrement())
-  name       String   
-  hourVolume Decimal  @map("hour_volume") @db.Decimal(3,1)
-  school     School   @relation(fields: [schoolId], references: [id])
-  schoolId   Int      @map("school_id")
-  sessions   Session[]
-}
-
-model Specialization {
-  id       Int    @id @default(autoincrement())
-  name     String 
-  school   School @relation(fields: [schoolId], references: [id])
-  schoolId Int    @map("school_id")
-  groups   Group[]
+  id              Int                            @id @default(autoincrement())
+  name            String
+  hourVolume      Decimal                        @map("hour_volume") @db.Decimal(3, 1)
+  department      Department                     @relation(fields: [departmentId], references: [id])
+  departmentId    Int                            @map("department_id")
+  sessions        Session[]
+  teacherExperts  TeacherSubjectSpecialization[]
+  specializations SubjectSpecialization[]
 }
 
 model Teacher {
-  id        Int      @id @default(autoincrement())
-  lastName  String?  @map("last_name")
-  firstName String?  @map("first_name")
-  school    School   @relation(fields: [schoolId], references: [id])
-  schoolId  Int      @map("school_id")
-  sessions  Session[]
+  id              Int                            @id @default(autoincrement())
+  lastName        String?                        @map("last_name")
+  firstName       String?                        @map("first_name")
+  school          School                         @relation(fields: [schoolId], references: [id])
+  schoolId        Int                            @map("school_id")
+  sessions        Session[]
+  expertSubjects  TeacherSubjectSpecialization[]
+}
+
+// Teacher "is expert in" Subject (many-to-many)
+model TeacherSubjectSpecialization {
+  teacherId Int @map("teacher_id")
+  subjectId Int @map("subject_id")
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@id([teacherId, subjectId])
+  @@map("teacher_subject_specializations")
+}
+
+model Specialization {
+  id           Int                     @id @default(autoincrement())
+  name         String 
+  department   Department              @relation(fields: [departmentId], references: [id])
+  departmentId Int                     @map("department_id")
+  groups       Group[]
+  subjects     SubjectSpecialization[]
+}
+
+// Subject "is taught in" / Specialization "trains" (many-to-many)
+model SubjectSpecialization {
+  subjectId        Int @map("subject_id")
+  specializationId Int @map("specialization_id")
+  subject          Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  specialization   Specialization @relation(fields: [specializationId], references: [id], onDelete: Cascade)
+
+  @@id([subjectId, specializationId])
+  @@map("subject_specializations")
 }
 
 model Group {
   id               Int             @id @default(autoincrement())
-  specialization   Specialization?  @relation(fields: [specializationId], references: [id])
-  specializationId Int?             @map("specialization_id")
   level            String?
-  department       Department?     @relation(fields: [departmentId], references: [id])
-  departmentId     Int?             @map("department_id")
-  school           School          @relation(fields: [schoolId], references: [id])
-  schoolId         Int              @map("school_id")
-  sessions         Session[]
+  specialization   Specialization  @relation(fields: [specializationId], references: [id])
+  specializationId Int             @map("specialization_id")
+  sessions         GroupSession[]
 
-  @@map("group")
+  @@map("groups")
 }
 
 model Session {
-  id        Int     @id @default(autoincrement())
-  subject   Subject? @relation(fields: [subjectId], references: [id])
-  subjectId Int?     @map("subject_id")
-  teacher   Teacher? @relation(fields: [teacherId], references: [id])
-  teacherId Int?     @map("teacher_id")
-  group     Group?   @relation(fields: [groupId], references: [id])
-  groupId   Int?     @map("group_id")
+  id        Int            @id @default(autoincrement())
+  subject   Subject        @relation(fields: [subjectId], references: [id])
+  subjectId Int            @map("subject_id")
+  teacher   Teacher?       @relation(fields: [teacherId], references: [id])
+  teacherId Int?           @map("teacher_id")
+  groups    GroupSession[]
+
+  @@map("sessions")
+}
+
+// Group "attends" Session (many-to-many)
+model GroupSession {
+  groupId   Int @map("group_id")
+  sessionId Int @map("session_id")
+  group     Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@id([groupId, sessionId])
+  @@map("group_sessions")
 }
 
 model Room {
-  id       Int    @id @default(autoincrement())
-  name     String?
-  capacity Int?
-  school   School @relation(fields: [schoolId], references: [id])
-  schoolId Int    @map("school_id")
+  id           Int        @id @default(autoincrement())
+  name         String?
+  capacity     Int?
+  school       School     @relation(fields: [schoolId], references: [id])
+  schoolId     Int        @map("school_id")
+  department   Department @relation(fields: [departmentId], references: [id])
+  departmentId Int        @map("department_id")
+
+  @@map("rooms")
 }
 

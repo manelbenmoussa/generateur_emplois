@@ -8,20 +8,74 @@ import * as groupDao from "../dao/groupDao";
 import * as sessionDao from "../dao/sessionDao";
 import * as roomDao from "../dao/roomDao";
 
-import type {
-  School,
-  Administrator,
-  Department,
-  Subject,
-  Specialization,
-  Teacher,
-  Group,
-  Session,
-  Room,
-} from "@prisma/client";
+/**
+ * Generic type definitions for database entities
+ * These match Prisma model shapes but don't depend on Prisma types
+ * This decouples DTOs from database implementation
+ */
+type DatabaseSchool = {
+  id: number;
+  name: string;
+  address?: string | null;
+};
+
+type DatabaseAdministrator = {
+  id: number;
+  username: string;
+  passwordHash: string;
+  schoolId: number;
+};
+
+type DatabaseDepartment = {
+  id: number;
+  name: string;
+  schoolId: number;
+};
+
+type DatabaseSubject = {
+  id: number;
+  name: string;
+  hourVolume: unknown; // Prisma Decimal type
+  departmentId: number;
+};
+
+type DatabaseSpecialization = {
+  id: number;
+  name: string;
+  departmentId: number;
+};
+
+type DatabaseTeacher = {
+  id: number;
+  lastName?: string | null;
+  firstName?: string | null;
+  schoolId: number;
+  // When joined with expertSubjects
+  expertSubjects?: Array<{ subjectId?: number; subject_id?: number }>;
+};
+
+type DatabaseGroup = {
+  id: number;
+  specializationId: number;
+  level?: string | null;
+};
+
+type DatabaseSession = {
+  id: number;
+  subjectId: number;
+  teacherId?: number | null;
+  // Groups are now many-to-many through GroupSession
+  groups?: Array<{ group: { id: number } }>;
+};
+
+type DatabaseRoom = {
+  id: number;
+  name?: string | null;
+  capacity?: number | null;
+  schoolId: number;
+};
 
 export interface SchoolDto {
-  id: number;
   name: string;
   address?: string | null;
 }
@@ -31,26 +85,22 @@ export interface AdministratorDto {
   username: string;
   // email is optional and sanitized
   email?: string | null;
-  schoolId: number;
 }
 
 export interface DepartmentDto {
   id: number;
   name: string;
-  schoolId: number;
 }
 
 export interface SubjectDto {
   id: number;
   name: string;
   hourVolume: number | null;
-  schoolId: number;
 }
 
 export interface SpecializationDto {
   id: number;
   name: string;
-  schoolId: number;
 }
 
 export interface TeacherDto {
@@ -58,29 +108,28 @@ export interface TeacherDto {
   firstName?: string | null;
   lastName?: string | null;
   email?: string | null;
-  schoolId: number;
+  // list of subject ids the teacher is specialized in (populated when DAO includes join)
+  specializedSubjectIds?: number[];
 }
 
 export interface GroupDto {
   id: number;
-  specializationId?: number | null;
+  specializationId: number;
   level?: string | null;
-  departmentId?: number | null;
-  schoolId: number;
 }
 
 export interface SessionDto {
   id: number;
-  subjectId?: number | null;
+  subjectId: number;
   teacherId?: number | null;
-  groupId?: number | null;
+  groupId?: number | null; // For algorithm compatibility, we'll extract the first group
+  groupIds?: number[]; // All groups this session belongs to
 }
 
 export interface RoomDto {
   id: number;
   name?: string | null;
   capacity?: number | null;
-  schoolId: number;
 }
 
 export interface AssembledPayloadDto {
@@ -109,83 +158,96 @@ function toNumber(v: unknown): number | null {
 }
 // mappers: pick and normalize only the fields algorithm needs
 
-export function mapSchool(raw: School): SchoolDto {
+export function mapSchool(raw: DatabaseSchool): SchoolDto {
   return {
-    id: raw.id,
     name: raw.name,
     address: raw.address,
   };
 }
 
-export function mapAdministrator(raw: Administrator): AdministratorDto {
+export function mapAdministrator(raw: DatabaseAdministrator): AdministratorDto {
   return {
     id: raw.id,
     username: raw.username,
     // email is not on the prisma model
-    schoolId: raw.schoolId,
   };
 }
 
-export function mapDepartment(raw: Department): DepartmentDto {
+export function mapDepartment(raw: DatabaseDepartment): DepartmentDto {
   return {
     id: raw.id,
     name: raw.name,
-    schoolId: raw.schoolId,
   };
 }
 
-export function mapSubject(raw: Subject): SubjectDto {
+export function mapSubject(raw: DatabaseSubject): SubjectDto {
   return {
     id: raw.id,
     name: raw.name,
     hourVolume: toNumber(raw.hourVolume),
-    schoolId: raw.schoolId,
   };
 }
 
-export function mapSpecialization(raw: Specialization): SpecializationDto {
+export function mapSpecialization(
+  raw: DatabaseSpecialization
+): SpecializationDto {
   return {
     id: raw.id,
     name: raw.name,
-    schoolId: raw.schoolId,
   };
 }
 
-export function mapTeacher(raw: Teacher): TeacherDto {
+export function mapTeacher(raw: DatabaseTeacher): TeacherDto {
+  // The DAO may include a join table shape like { subjectId } or { subject_id }.
+  type SpecializationRow = { subjectId?: number; subject_id?: number };
+
+  const typed = raw as unknown as { expertSubjects?: SpecializationRow[] };
+  const specializedSubjectIds: number[] = Array.isArray(typed.expertSubjects)
+    ? typed.expertSubjects
+        .map((s) => {
+          const id = s?.subjectId ?? s?.subject_id;
+          return id != null ? Number(id) : undefined;
+        })
+        .filter((id): id is number => id !== undefined)
+    : [];
+
   return {
     id: raw.id,
     firstName: raw.firstName,
     lastName: raw.lastName,
     // email is not on the prisma model
-    schoolId: raw.schoolId,
+    specializedSubjectIds: specializedSubjectIds.length
+      ? specializedSubjectIds
+      : undefined,
   };
 }
 
-export function mapGroup(raw: Group): GroupDto {
+export function mapGroup(raw: DatabaseGroup): GroupDto {
   return {
     id: raw.id,
     specializationId: raw.specializationId,
     level: raw.level,
-    departmentId: raw.departmentId,
-    schoolId: raw.schoolId,
   };
 }
 
-export function mapSession(raw: Session): SessionDto {
+export function mapSession(raw: DatabaseSession): SessionDto {
+  // Extract group IDs from the many-to-many relationship
+  const groupIds = raw.groups?.map((g) => g.group.id) || [];
+
   return {
     id: raw.id,
     subjectId: raw.subjectId,
     teacherId: raw.teacherId,
-    groupId: raw.groupId,
+    groupId: groupIds[0] || null, // For algorithm compatibility, use first group
+    groupIds: groupIds.length > 0 ? groupIds : undefined,
   };
 }
 
-export function mapRoom(raw: Room): RoomDto {
+export function mapRoom(raw: DatabaseRoom): RoomDto {
   return {
     id: raw.id,
     name: raw.name,
     capacity: raw.capacity,
-    schoolId: raw.schoolId,
   };
 }
 
@@ -198,8 +260,6 @@ export function isAssembledPayloadDto(x: unknown): x is AssembledPayloadDto {
     "sessions" in x
   );
 }
-
-
 
 export async function assembleAllEntitiesForSchool(
   schoolId: number
@@ -236,5 +296,31 @@ export async function assembleAllEntitiesForSchool(
     groups: (groupsRaw ?? []).map(mapGroup),
     sessions: (sessionsRaw ?? []).map(mapSession),
     rooms: (roomsRaw ?? []).map(mapRoom),
+  };
+}
+
+export interface TimetableAlgorithmData {
+  subjects: Record<number, SubjectDto>;
+  teachers: Record<number, TeacherDto>;
+  groups: Record<number, GroupDto>;
+  rooms: Record<number, RoomDto>;
+  sessions: SessionDto[]; // sessions are the core "to-be-scheduled" items
+}
+
+export function transformDataForAlgorithm(
+  payload: AssembledPayloadDto
+): TimetableAlgorithmData {
+  const idMapper = <T extends { id: number }>(items: T[]): Record<number, T> =>
+    items.reduce((acc, item) => {
+      acc[item.id] = item;
+      return acc;
+    }, {} as Record<number, T>);
+
+  return {
+    subjects: idMapper(payload.subjects),
+    teachers: idMapper(payload.teachers),
+    groups: idMapper(payload.groups),
+    rooms: idMapper(payload.rooms),
+    sessions: payload.sessions, // sessions are not mapped by id, they are the list of events to schedule
   };
 }

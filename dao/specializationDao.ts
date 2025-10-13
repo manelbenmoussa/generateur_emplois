@@ -4,7 +4,14 @@ import prisma from "./db";
 export async function getSpecializationsBySchool(
   schoolId: number
 ): Promise<Specialization[]> {
-  return prisma.specialization.findMany({ where: { schoolId } });
+  // Specializations belong to Department, which belongs to School
+  return prisma.specialization.findMany({
+    where: {
+      department: {
+        schoolId,
+      },
+    },
+  });
 }
 
 export async function getSpecializationById(

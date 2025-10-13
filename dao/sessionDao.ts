@@ -1,21 +1,38 @@
 import prisma from "./db";
-import type { Session } from "../types/entities";
 
-export async function getSessionsBySchool(
-  schoolId: number
-): Promise<Session[]> {
-  // sessions are linked to groups/teachers/subjects which are linked to a school
-  return (await prisma.session.findMany({
-    where: { group: { is: { schoolId } } },
-    include: { teacher: true, subject: true, group: true },
-  })) as unknown as Session[];
+export async function getSessionsBySchool(schoolId: number) {
+  // Sessions are linked to subjects (which belong to departments which belong to school)
+  // Also linked to groups through GroupSession join table
+  return await prisma.session.findMany({
+    where: {
+      subject: {
+        department: {
+          schoolId,
+        },
+      },
+    },
+    include: {
+      teacher: true,
+      subject: true,
+      groups: {
+        include: {
+          group: true,
+        },
+      },
+    },
+  });
 }
 
-export async function getSessionsByTeacher(
-  teacherId: number
-): Promise<Session[]> {
-  return (await prisma.session.findMany({
+export async function getSessionsByTeacher(teacherId: number) {
+  return await prisma.session.findMany({
     where: { teacherId },
-    include: { subject: true, group: true },
-  })) as unknown as Session[];
+    include: {
+      subject: true,
+      groups: {
+        include: {
+          group: true,
+        },
+      },
+    },
+  });
 }

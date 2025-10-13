@@ -1,12 +1,25 @@
-import { Teacher } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import prisma from "./db";
+
+// Use the generated Prisma payload type for the included join relation.
+export type TeacherWithSpecializations = Prisma.TeacherGetPayload<{
+  include: { expertSubjects: true };
+}>;
 
 export async function getTeachersBySchool(
   schoolId: number
-): Promise<Teacher[]> {
-  return prisma.teacher.findMany({ where: { schoolId } });
+): Promise<TeacherWithSpecializations[]> {
+  return prisma.teacher.findMany({
+    where: { schoolId },
+    include: { expertSubjects: true },
+  });
 }
 
-export async function getTeacherById(id: number): Promise<Teacher | null> {
-  return prisma.teacher.findUnique({ where: { id } });
+export async function getTeacherById(
+  id: number
+): Promise<TeacherWithSpecializations | null> {
+  return prisma.teacher.findUnique({
+    where: { id },
+    include: { expertSubjects: true },
+  });
 }
