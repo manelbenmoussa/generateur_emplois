@@ -24,7 +24,7 @@ export async function GET(request: Request) {
 // body: { firstName?, lastName?, schoolId, groupId? }
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as any;
+    const body = (await request.json());
     const { firstName, lastName, schoolId, groupId } = body;
 
     if (!schoolId) {
