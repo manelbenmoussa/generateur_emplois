@@ -15,6 +15,7 @@ export async function getTeachersBySchool(
   });
 }
 
+
 export async function getTeacherById(
   id: number
 ): Promise<TeacherWithSpecializations | null> {
@@ -23,3 +24,4 @@ export async function getTeacherById(
     include: { expertSubjects: true },
   });
 }
+
