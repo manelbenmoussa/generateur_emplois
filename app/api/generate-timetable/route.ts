@@ -17,7 +17,6 @@ export async function GET() {
     // }
 
     const pdfPayload = await generateAndFormatTimetable(schoolId);
-
     return NextResponse.json({ pdfPayload });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

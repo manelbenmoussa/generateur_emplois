@@ -5,7 +5,7 @@ import {
   type AssembledPayloadDto,
 } from "../dto/timeTableDto";
 import { formatScheduleForPdf, type PdfPayload } from "../utils/pdfGenerator";
-import { runGreedyScheduling } from "./greedyScheduler";
+import { runGeneticScheduling } from "./geneticScheduler";
 
 export async function generateAndFormatTimetable(
   schoolId: number
@@ -19,8 +19,9 @@ export async function generateAndFormatTimetable(
   // 2. Transform it into the fast, ID-mapped format for the algorithm.
   const algorithmData = transformDataForAlgorithm(flatData);
 
-  // 3. Run the GREEDY algorithm (FAST) to get the schedule assignments.
-  const scheduleAssignments = runGreedyScheduling(algorithmData);
+  // 3. Run the GENETIC algorithm (optimized) to get the schedule assignments.
+  // Swap to runGreedyScheduling(algorithmData) if you want the old version.
+  const scheduleAssignments = runGeneticScheduling(algorithmData);
 
   // 4. Format the assignments into the final JSON for the PDF.
   const pdfPayload = formatScheduleForPdf(scheduleAssignments, flatData);
@@ -37,14 +38,4 @@ export async function buildTimetablePayload(schoolId: number) {
   }
 
   return data as AssembledPayloadDto;
-}
-
-export async function generateTimetable(schoolId: number) {
-  const payload = await buildTimetablePayload(schoolId);
-
-  // TODO: call timetable algorithm / AI with payload and return the generated timetable
-  return { generated: false, payload } as {
-    generated: boolean;
-    payload: AssembledPayloadDto;
-  };
 }

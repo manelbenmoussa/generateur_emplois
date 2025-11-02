@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import * as teacherDao from "@/dao/teacherDao";
+import type { Teacher } from "@/types/entities";
 
 // GET /api/teachers?schoolId=1
 export async function GET(request: Request) {
@@ -12,7 +13,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Invalid schoolId" }, { status: 400 });
     }
 
-    const teachers = await teacherDao.getTeachersBySchool(schoolId);
+    const teachers: Teacher[] = await teacherDao.getTeachersBySchool(schoolId);
     return NextResponse.json({ teachers });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
@@ -20,24 +21,20 @@ export async function GET(request: Request) {
   }
 }
 
-// POST /api/teachers
-// body: { firstName?, lastName?, schoolId, expertSubjectIds? }
+
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as any;
-    const { firstName, lastName, schoolId, expertSubjectIds } = body;
+    const body: Teacher = await request.json();
+    const { firstName, lastName, schoolId } = body;
 
     if (!schoolId) {
       return NextResponse.json({ error: "Missing schoolId" }, { status: 400 });
     }
 
-    const created = await teacherDao.createTeacher({
+    const created: Teacher | null = await teacherDao.createTeacher({
       firstName,
       lastName,
-      schoolId: Number(schoolId),
-      expertSubjectIds: Array.isArray(expertSubjectIds)
-        ? expertSubjectIds.map(Number)
-        : undefined,
+      schoolId: Number(schoolId)
     });
 
     return NextResponse.json({ teacher: created }, { status: 201 });

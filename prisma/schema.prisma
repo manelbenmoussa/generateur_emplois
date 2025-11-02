@@ -93,6 +93,7 @@ model Group {
   level            String?
   specialization   Specialization  @relation(fields: [specializationId], references: [id])
   specializationId Int             @map("specialization_id")
+  directSessions   Session[]
   sessions         GroupSession[]
   students         Student[]
 
@@ -105,6 +106,8 @@ model Session {
   subjectId Int            @map("subject_id")
   teacher   Teacher?       @relation(fields: [teacherId], references: [id])
   teacherId Int?           @map("teacher_id")
+  group     Group          @relation(fields: [groupId], references: [id])
+  groupId   Int            @map("group_id")
   groups    GroupSession[]
 
   @@map("sessions")

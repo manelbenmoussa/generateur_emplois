@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import * as studentDao from "@/dao/studentDao";
+import type { Student } from "@/types/entities";
 
 // GET /api/students?schoolId=1
 export async function GET(request: Request) {
@@ -12,7 +13,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Invalid schoolId" }, { status: 400 });
     }
 
-    const students = await studentDao.getStudentsBySchool(schoolId);
+    const students: Student[] = await studentDao.getStudentsBySchool(schoolId);
     return NextResponse.json({ students });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
@@ -24,14 +25,14 @@ export async function GET(request: Request) {
 // body: { firstName?, lastName?, schoolId, groupId? }
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as any;
+    const body = await request.json();
     const { firstName, lastName, schoolId, groupId } = body;
 
     if (!schoolId) {
       return NextResponse.json({ error: "Missing schoolId" }, { status: 400 });
     }
 
-    const created = await studentDao.createStudent({
+    const created: Student = await studentDao.createStudent({
       firstName,
       lastName,
       schoolId: Number(schoolId),
