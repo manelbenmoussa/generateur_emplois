@@ -60,6 +60,14 @@ export interface RoomSimple {
   schoolId: number;
 }
 
+export interface Student {
+  id: number;
+  firstName?: string | null;
+  lastName?: string | null;
+  groupId: number | null;
+  schoolId: number;
+}
+
 export interface AssembledPayload {
   school: School | null;
   administrators: Administrator[];

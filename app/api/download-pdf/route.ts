@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateAndFormatTimetable } from "../../../services/timetableService";
+import { DAYS, TIME_SLOTS } from "../../../constants/schedule";
 
 interface PdfSession {
   id: number | string;
@@ -10,29 +11,6 @@ interface PdfSession {
   room: string;
   dateTime: string;
 }
-
-interface TimeSlot {
-  startTime: string;
-  endTime: string;
-}
-
-const TIME_SLOTS: TimeSlot[] = [
-  { startTime: "08:00", endTime: "09:30" },
-  { startTime: "09:45", endTime: "11:15" },
-  { startTime: "11:30", endTime: "13:00" },
-  { startTime: "13:30", endTime: "15:00" },
-  { startTime: "15:15", endTime: "17:00" },
-  { startTime: "17:15", endTime: "18:45" },
-];
-
-const DAYS = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
 
 export async function GET() {
   try {
