@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import AdminLayout from "@/components/AdminLayout";
 import Card from "@/components/Card";
 import DataTable from "@/components/DataTable";
@@ -13,6 +14,10 @@ interface StudentRow {
 }
 
 export default function AdminStudentsPage() {
+  const [rows, setRows] = useState<StudentRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const columns = [
     { key: "firstName" as keyof StudentRow, label: "First Name" },
     { key: "lastName" as keyof StudentRow, label: "Last Name" },
@@ -21,14 +26,44 @@ export default function AdminStudentsPage() {
     { key: "actions" as any, label: "Actions" },
   ];
 
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`/api/students?schoolId=1`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to load students");
+        const mapped: StudentRow[] = (data.students || []).map((s: any) => ({
+          id: s.id,
+          firstName: s.firstName ?? "",
+          lastName: s.lastName ?? "",
+          email: s.email ?? "",
+          group: s.groupId ? String(s.groupId) : "",
+        }));
+        setRows(mapped);
+      } catch (e: any) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
   return (
     <AdminLayout title="Students" description="Manage students and enrollments">
       <Card title="All Students">
-        <DataTable<StudentRow>
-          columns={columns}
-          data={[]}
-          emptyMessage="No students yet."
-        />
+        {error ? (
+          <p style={{ color: "#dc2626" }}>{error}</p>
+        ) : loading ? (
+          <p>Loading...</p>
+        ) : (
+          <DataTable<StudentRow>
+            columns={columns}
+            data={rows}
+            emptyMessage="No students yet."
+          />
+        )}
       </Card>
     </AdminLayout>
   );
