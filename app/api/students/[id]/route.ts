@@ -33,7 +33,7 @@ export async function PATCH(
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
     }
 
-    const body = (await request.json()) as any;
+    const body = await request.json();
     const { firstName, lastName, groupId } = body;
 
     const updated = await studentDao.updateStudent(id, {

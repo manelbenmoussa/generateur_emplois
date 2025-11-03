@@ -22,17 +22,22 @@ export async function GET(request: Request) {
 }
 
 // POST /api/students
-// body: { firstName?, lastName?, schoolId, groupId? }
+// body: { userId, firstName?, lastName?, schoolId, groupId? }
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { firstName, lastName, schoolId, groupId } = body;
+    const { userId, firstName, lastName, schoolId, groupId } = body;
 
     if (!schoolId) {
       return NextResponse.json({ error: "Missing schoolId" }, { status: 400 });
     }
 
-    const created: Student = await studentDao.createStudent({
+    if (!userId) {
+      return NextResponse.json({ error: "Missing userId" }, { status: 400 });
+    }
+
+    const created = await studentDao.createStudent({
+      userId,
       firstName,
       lastName,
       schoolId: Number(schoolId),

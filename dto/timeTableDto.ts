@@ -64,8 +64,9 @@ type DatabaseSession = {
   id: number;
   subjectId: number;
   teacherId?: number | null;
-  // Groups are now many-to-many through GroupSession
-  groups?: Array<{ group: { id: number } }>;
+  groupId: number;
+  // When DAO includes the group relation
+  group?: { id: number };
 };
 
 type DatabaseRoom = {
@@ -122,8 +123,7 @@ export interface SessionDto {
   id: number;
   subjectId: number;
   teacherId?: number | null;
-  groupId?: number | null; // For algorithm compatibility, we'll extract the first group
-  groupIds?: number[]; // All groups this session belongs to
+  groupId: number;
 }
 
 export interface RoomDto {
@@ -201,9 +201,21 @@ export function mapTeacher(raw: DatabaseTeacher): TeacherDto {
   // The DAO may include a join table shape like { subjectId } or { subject_id }.
   type SpecializationRow = { subjectId?: number; subject_id?: number };
 
-  const typed = raw as unknown as { expertSubjects?: SpecializationRow[] };
-  const specializedSubjectIds: number[] = Array.isArray(typed.expertSubjects)
+  // The DAO might return the join under different property names depending on the query
+  // Accept either `expertSubjects` or `subjects` and normalize both shapes.
+  const typed = raw as unknown as {
+    expertSubjects?: SpecializationRow[];
+    subjects?: SpecializationRow[];
+  };
+
+  const joinRows = Array.isArray(typed.expertSubjects)
     ? typed.expertSubjects
+    : Array.isArray(typed.subjects)
+    ? typed.subjects
+    : undefined;
+
+  const specializedSubjectIds: number[] = Array.isArray(joinRows)
+    ? joinRows
         .map((s) => {
           const id = s?.subjectId ?? s?.subject_id;
           return id != null ? Number(id) : undefined;
@@ -231,15 +243,11 @@ export function mapGroup(raw: DatabaseGroup): GroupDto {
 }
 
 export function mapSession(raw: DatabaseSession): SessionDto {
-  // Extract group IDs from the many-to-many relationship
-  const groupIds = raw.groups?.map((g) => g.group.id) || [];
-
   return {
     id: raw.id,
     subjectId: raw.subjectId,
     teacherId: raw.teacherId,
-    groupId: groupIds[0] || null, // For algorithm compatibility, use first group
-    groupIds: groupIds.length > 0 ? groupIds : undefined,
+    groupId: raw.groupId,
   };
 }
 

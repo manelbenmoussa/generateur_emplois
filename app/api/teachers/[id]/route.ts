@@ -34,18 +34,26 @@ export async function PATCH(
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
     }
 
-    const body = (await request.json()) as any;
+    const body = (await request.json()) as {
+      firstName?: string | null;
+      lastName?: string | null;
+      expertSubjectIds?: number[] | null;
+    };
     const { firstName, lastName, expertSubjectIds } = body;
+
+    // The DAO expects `subjectIds`. Allow clients to send `expertSubjectIds` and
+    // map it to the DAO shape. undefined -> no change, null -> clear, array -> set
+    const subjectIds =
+      expertSubjectIds === undefined
+        ? undefined
+        : Array.isArray(expertSubjectIds)
+        ? expertSubjectIds.map(Number)
+        : null;
 
     const updated = await teacherDao.updateTeacher(id, {
       firstName,
       lastName,
-      expertSubjectIds:
-        expertSubjectIds === undefined
-          ? undefined
-          : Array.isArray(expertSubjectIds)
-          ? expertSubjectIds.map(Number)
-          : null,
+      subjectIds,
     });
 
     return NextResponse.json({ teacher: updated });

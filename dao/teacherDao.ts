@@ -2,64 +2,82 @@ import type { Prisma } from "@prisma/client";
 import prisma from "./db";
 
 // Use the generated Prisma payload type for the included join relation.
-export type TeacherWithSpecializations = Prisma.TeacherGetPayload<{
-  include: { expertSubjects: true };
+export type TeacherWithSubjects = Prisma.TeacherGetPayload<{
+  include: { subjects: true; user: true };
 }>;
 
+/**
+ * Get teachers by school with their subjects and user account
+ */
 export async function getTeachersBySchool(
   schoolId: number
-): Promise<TeacherWithSpecializations[]> {
+): Promise<TeacherWithSubjects[]> {
   return prisma.teacher.findMany({
     where: { schoolId },
-    include: { expertSubjects: true },
+    include: {
+      subjects: true,
+      user: true,
+    },
   });
 }
 
-
+/**
+ * Get teacher by ID with subjects and user account
+ */
 export async function getTeacherById(
   id: number
-): Promise<TeacherWithSpecializations | null> {
+): Promise<TeacherWithSubjects | null> {
   return prisma.teacher.findUnique({
     where: { id },
-    include: { expertSubjects: true },
+    include: {
+      subjects: true,
+      user: true,
+    },
   });
 }
 
+/**
+ * Create a teacher profile linked to a User account
+ * @param userId - The User ID to link this teacher profile to
+ */
 export async function createTeacher(data: {
+  userId: string;
   firstName?: string | null;
   lastName?: string | null;
   schoolId: number;
-  expertSubjectIds?: number[];
+  subjectIds?: number[];
 }) {
-  // Create teacher and optionally create expert subject links
+  // Create teacher and optionally create subject links
   const {
+    userId,
     firstName = null,
     lastName = null,
     schoolId,
-    expertSubjectIds,
+    subjectIds,
   } = data;
 
   const teacher = await prisma.teacher.create({
     data: {
+      userId,
       firstName,
       lastName,
       schoolId,
     },
   });
 
-  if (expertSubjectIds && expertSubjectIds.length > 0) {
-    const createMany = expertSubjectIds.map((subjectId) => ({
+  if (subjectIds && subjectIds.length > 0) {
+    const createMany = subjectIds.map((subjectId) => ({
       teacherId: teacher.id,
       subjectId,
     }));
     // Use createMany on the join table
-    await prisma.teacherSubjectSpecialization.createMany({
+    await prisma.teacherSubject.createMany({
       data: createMany,
       skipDuplicates: true,
     });
   }
 
-  // Return the created teacher with specializations included
+  // Return the created teacher with subjects included
   return getTeacherById(teacher.id);
 }
 
@@ -68,10 +86,10 @@ export async function updateTeacher(
   data: {
     firstName?: string | null;
     lastName?: string | null;
-    expertSubjectIds?: number[] | null; // null means no change, [] means clear
+    subjectIds?: number[] | null; // null means no change, [] means clear
   }
 ) {
-  const { firstName, lastName, expertSubjectIds } = data;
+  const { firstName, lastName, subjectIds } = data;
 
   // Update teacher basic fields
   await prisma.teacher.update({
@@ -82,19 +100,19 @@ export async function updateTeacher(
     },
   });
 
-  // If expertSubjectIds is provided, sync the join table
-  if (expertSubjectIds !== undefined) {
+  // If subjectIds is provided, sync the join table
+  if (subjectIds !== undefined) {
     // Remove existing links
-    await prisma.teacherSubjectSpecialization.deleteMany({
+    await prisma.teacherSubject.deleteMany({
       where: { teacherId: id },
     });
 
-    if (expertSubjectIds && expertSubjectIds.length > 0) {
-      const createMany = expertSubjectIds.map((subjectId) => ({
+    if (subjectIds && subjectIds.length > 0) {
+      const createMany = subjectIds.map((subjectId) => ({
         teacherId: id,
         subjectId,
       }));
-      await prisma.teacherSubjectSpecialization.createMany({
+      await prisma.teacherSubject.createMany({
         data: createMany,
         skipDuplicates: true,
       });
