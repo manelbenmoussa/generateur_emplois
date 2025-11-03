@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import AdminLayout from '@/components/AdminLayout';
+import { useRouter } from "next/navigation";
+import AdminLayout from "@/components/AdminLayout";
+import GenerateTimetable from "@/components/GenerateTimetable";
 
 export default function AdminHomePage() {
   const router = useRouter();
@@ -137,33 +138,48 @@ export default function AdminHomePage() {
         }
       `}</style>
 
-      <AdminLayout title="Admin Dashboard" description="Manage your timetable system">
+      <AdminLayout
+        title="Admin Dashboard"
+        description="Manage your timetable system"
+      >
         <div className="cards">
-          <div className="nav-card" onClick={() => navigateTo('/admin/rooms')}>
+          <div className="nav-card" onClick={() => navigateTo("/admin/rooms")}>
             <div className="icon">🏫</div>
             <h3>Rooms</h3>
             <p>Manage classrooms, labs, and other facilities</p>
           </div>
 
-          <div className="nav-card" onClick={() => navigateTo('/admin/sessions')}>
+          <div
+            className="nav-card"
+            onClick={() => navigateTo("/admin/sessions")}
+          >
             <div className="icon">📅</div>
             <h3>Sessions</h3>
             <p>Schedule and organize class sessions</p>
           </div>
 
-          <div className="nav-card" onClick={() => navigateTo('/admin/subjects')}>
+          <div
+            className="nav-card"
+            onClick={() => navigateTo("/admin/subjects")}
+          >
             <div className="icon">📚</div>
             <h3>Subjects</h3>
             <p>Add and manage course subjects</p>
           </div>
 
-          <div className="nav-card" onClick={() => navigateTo('/admin/teachers')}>
+          <div
+            className="nav-card"
+            onClick={() => navigateTo("/admin/teachers")}
+          >
             <div className="icon">👨‍🏫</div>
             <h3>Teachers</h3>
             <p>Manage teacher information and assignments</p>
           </div>
 
-          <div className="nav-card" onClick={() => navigateTo('/admin/students')}>
+          <div
+            className="nav-card"
+            onClick={() => navigateTo("/admin/students")}
+          >
             <div className="icon">👨‍🎓</div>
             <h3>Students</h3>
             <p>Manage student records and enrollments</p>
@@ -176,12 +192,16 @@ export default function AdminHomePage() {
             <div className="detail-item">
               <h4>Automated Scheduling</h4>
               <p>
-                Our smart algorithm handles conflict-free timetable generation automatically
+                Our smart algorithm handles conflict-free timetable generation
+                automatically
               </p>
             </div>
             <div className="detail-item">
               <h4>Real-time Updates</h4>
-              <p>Changes to rooms or teachers are reflected instantly across all schedules</p>
+              <p>
+                Changes to rooms or teachers are reflected instantly across all
+                schedules
+              </p>
             </div>
             <div className="detail-item">
               <h4>Resource Optimization</h4>
@@ -189,7 +209,9 @@ export default function AdminHomePage() {
             </div>
             <div className="detail-item">
               <h4>Conflict Detection</h4>
-              <p>Automatic validation prevents scheduling conflicts and overlaps</p>
+              <p>
+                Automatic validation prevents scheduling conflicts and overlaps
+              </p>
             </div>
           </div>
         </div>
@@ -207,6 +229,10 @@ export default function AdminHomePage() {
             <h4>Scheduled Sessions</h4>
             <p className="count">—</p>
           </div>
+        </div>
+
+        <div style={{ marginTop: 24 }}>
+          <GenerateTimetable />
         </div>
       </AdminLayout>
     </>
