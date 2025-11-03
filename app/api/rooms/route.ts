@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check for duplicate room name
-    const existingRoom = await getRoomByName(name, schoolId);
+    const existingRoom = await getRoomByName(name, parseInt(String(schoolId)));
     if (existingRoom) {
       return NextResponse.json(
         { error: "A room with this name already exists in this school" },
@@ -56,9 +56,9 @@ export async function POST(request: NextRequest) {
 
     const newRoom = await createRoom({
       name,
-      capacity: parseInt(capacity),
-      schoolId: parseInt(schoolId),
-      departmentId: parseInt(departmentId),
+      capacity: parseInt(String(capacity)),
+      schoolId: parseInt(String(schoolId)),
+      departmentId: parseInt(String(departmentId)),
     });
 
     return NextResponse.json(newRoom, { status: 201 });
@@ -83,8 +83,11 @@ export async function PUT(request: NextRequest) {
 
     // Check for duplicate room name (excluding current room)
     if (name && schoolId) {
-      const existingRoom = await getRoomByName(name, schoolId);
-      if (existingRoom && existingRoom.id !== parseInt(id)) {
+      const existingRoom = await getRoomByName(
+        name,
+        parseInt(String(schoolId))
+      );
+      if (existingRoom && existingRoom.id !== parseInt(String(id))) {
         return NextResponse.json(
           { error: "A room with this name already exists in this school" },
           { status: 409 }
@@ -94,12 +97,14 @@ export async function PUT(request: NextRequest) {
 
     const updateData: any = {};
     if (name !== undefined) updateData.name = name;
-    if (capacity !== undefined) updateData.capacity = parseInt(capacity);
-    if (schoolId !== undefined) updateData.schoolId = parseInt(schoolId);
+    if (capacity !== undefined)
+      updateData.capacity = parseInt(String(capacity));
+    if (schoolId !== undefined)
+      updateData.schoolId = parseInt(String(schoolId));
     if (departmentId !== undefined)
-      updateData.departmentId = parseInt(departmentId);
+      updateData.departmentId = parseInt(String(departmentId));
 
-    const updatedRoom = await updateRoom(parseInt(id), updateData);
+    const updatedRoom = await updateRoom(parseInt(String(id)), updateData);
     return NextResponse.json(updatedRoom);
   } catch (error) {
     console.error("Error updating room:", error);
