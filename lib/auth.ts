@@ -65,6 +65,34 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.picture = user.image;
       }
+
+      // Fetch schoolId based on user role
+      if (token.id && token.role) {
+        try {
+          if (token.role === "ADMIN") {
+            const admin = await prisma.administrator.findUnique({
+              where: { userId: token.id as string },
+              select: { schoolId: true },
+            });
+            token.schoolId = admin?.schoolId;
+          } else if (token.role === "TEACHER") {
+            const teacher = await prisma.teacher.findUnique({
+              where: { userId: token.id as string },
+              select: { schoolId: true },
+            });
+            token.schoolId = teacher?.schoolId;
+          } else if (token.role === "STUDENT") {
+            const student = await prisma.student.findUnique({
+              where: { userId: token.id as string },
+              select: { schoolId: true },
+            });
+            token.schoolId = student?.schoolId;
+          }
+        } catch (error) {
+          console.error("Error fetching schoolId:", error);
+        }
+      }
+
       return token;
     },
     async session({ session, token }) {
@@ -72,6 +100,7 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role;
         session.user.id = token.id;
         session.user.image = token.picture as string;
+        session.user.schoolId = token.schoolId as number | undefined;
       }
       return session;
     },

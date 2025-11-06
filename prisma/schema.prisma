@@ -27,6 +27,7 @@ model User {
   updatedAt     DateTime  @updatedAt @map("updated_at")
 
   // Relations to existing models - Auth-first approach
+  administrator Administrator?
   teacher       Teacher?
   student       Student?
 
@@ -84,11 +85,13 @@ model School {
 }
 
 model Administrator {
-  id           Int    @id @default(autoincrement())
-  username     String @unique
-  passwordHash String @map("password_hash")
-  school       School @relation(fields: [schoolId], references: [id])
-  schoolId     Int    @map("school_id")
+  id       Int    @id @default(autoincrement())
+  school   School @relation(fields: [schoolId], references: [id])
+  schoolId Int    @map("school_id")
+  
+  // Link to User account
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String @unique @map("user_id")
 }
 
 model Department {
@@ -113,8 +116,6 @@ model Subject {
 
 model Teacher {
   id         Int              @id @default(autoincrement())
-  lastName   String?          @map("last_name")
-  firstName  String?          @map("first_name")
   school     School           @relation(fields: [schoolId], references: [id])
   schoolId   Int              @map("school_id")
   subjects   TeacherSubject[]
@@ -166,30 +167,29 @@ model Session {
 }
 
 model Room {
-  id           Int        @id @default(autoincrement())
+  id           Int         @id @default(autoincrement())
   name         String?
   capacity     Int?
-  school       School     @relation(fields: [schoolId], references: [id])
-  schoolId     Int        @map("school_id")
-  department   Department @relation(fields: [departmentId], references: [id])
-  departmentId Int        @map("department_id")
+  school       School      @relation(fields: [schoolId], references: [id])
+  schoolId     Int         @map("school_id")
+  department   Department? @relation(fields: [departmentId], references: [id])
+  departmentId Int?        @map("department_id")
 
+  @@unique([name, schoolId], name: "unique_room_name_per_school")
   @@map("rooms")
 }
 
 // Students are members of a Group and belong to a School
 model Student {
-  id         Int     @id @default(autoincrement())
-  firstName  String? @map("first_name")
-  lastName   String? @map("last_name")
-  school     School  @relation(fields: [schoolId], references: [id])
-  schoolId   Int     @map("school_id")
-  group      Group?  @relation(fields: [groupId], references: [id])
-  groupId    Int?    @map("group_id")
+  id       Int     @id @default(autoincrement())
+  school   School  @relation(fields: [schoolId], references: [id])
+  schoolId Int     @map("school_id")
+  group    Group?  @relation(fields: [groupId], references: [id])
+  groupId  Int?    @map("group_id")
   
   // Link to User account
-  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String  @unique @map("user_id")
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String  @unique @map("user_id")
 
   @@map("students")
 }

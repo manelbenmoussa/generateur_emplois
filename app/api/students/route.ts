@@ -22,11 +22,11 @@ export async function GET(request: Request) {
 }
 
 // POST /api/students
-// body: { userId, firstName?, lastName?, schoolId, groupId? }
+// body: { userId, schoolId, groupId? }
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { userId, firstName, lastName, schoolId, groupId } = body;
+    const { userId, schoolId, groupId } = body;
 
     if (!schoolId) {
       return NextResponse.json({ error: "Missing schoolId" }, { status: 400 });
@@ -38,8 +38,6 @@ export async function POST(request: Request) {
 
     const created = await studentDao.createStudent({
       userId,
-      firstName,
-      lastName,
       schoolId: Number(schoolId),
       groupId: groupId === undefined ? undefined : Number(groupId),
     });

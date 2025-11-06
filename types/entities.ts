@@ -5,11 +5,28 @@ export interface School {
   address?: string | null;
 }
 
+export interface User {
+  id: string;
+  name?: string | null;
+  email: string;
+  role: "ADMIN" | "TEACHER" | "STUDENT";
+  image?: string | null;
+}
+
+export interface Administrator {
+  id: number;
+  schoolId: number;
+  userId: string;
+  user?: User;
+  school?: School;
+}
+
 export interface Teacher {
   id: number;
-  lastName?: string | null;
-  firstName?: string | null;
   schoolId: number;
+  userId: string;
+  user?: User;
+  school?: School;
 }
 
 export interface Subject {
@@ -34,14 +51,22 @@ export interface Session {
   groupId: number | null;
 }
 
-export interface Administrator {
+export interface Student {
   id: number;
-  username: string;
-  passwordHash: string;
   schoolId: number;
+  groupId: number | null;
+  userId: string;
+  user?: User;
+  school?: School;
 }
 
 export interface DepartmentSimple {
+  id: number;
+  name: string;
+  schoolId: number;
+}
+
+export interface Department {
   id: number;
   name: string;
   schoolId: number;
@@ -53,19 +78,14 @@ export interface SpecializationSimple {
   schoolId: number;
 }
 
-export interface RoomSimple {
+export interface Room {
   id: number;
-  name?: string | null;
-  capacity?: number | null;
+  name: string;
+  capacity: number;
   schoolId: number;
-}
-
-export interface Student {
-  id: number;
-  firstName?: string | null;
-  lastName?: string | null;
-  groupId: number | null;
-  schoolId: number;
+  departmentId: number | null;
+  department?: Department | null;
+  school?: School;
 }
 
 export interface AssembledPayload {
@@ -77,7 +97,7 @@ export interface AssembledPayload {
   teachers: Teacher[];
   groups: Group[];
   sessions: Session[];
-  rooms: RoomSimple[];
+  rooms: Room[];
 }
 
 // runtime guards (shallow)

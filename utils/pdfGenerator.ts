@@ -70,9 +70,7 @@ export function formatScheduleForPdf(
     return {
       id: assignment.id,
       subject: subject?.name ?? "Unknown Subject",
-      teacher: teacher
-        ? `${teacher.firstName} ${teacher.lastName}`
-        : "Unknown Teacher",
+      teacher: teacher?.name ?? "Unknown Teacher",
       group: group?.level ?? `Group ${assignment.groupId}`, // Fallback to ID if level is not set
       specialization: specialization?.name ?? "No Specialization",
       room: room?.name ?? `Room ${assignment.roomId}`,

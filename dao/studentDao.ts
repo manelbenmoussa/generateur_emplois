@@ -42,23 +42,13 @@ export async function getStudentById(
  */
 export async function createStudent(data: {
   userId: string;
-  firstName?: string | null;
-  lastName?: string | null;
   schoolId: number;
   groupId?: number | null;
 }) {
-  const {
-    userId,
-    firstName = null,
-    lastName = null,
-    schoolId,
-    groupId = null,
-  } = data;
+  const { userId, schoolId, groupId = null } = data;
   return prisma.student.create({
     data: {
       userId,
-      firstName,
-      lastName,
       schoolId,
       groupId,
     },
@@ -72,8 +62,6 @@ export async function createStudent(data: {
 export async function updateStudent(
   id: number,
   data: {
-    firstName?: string | null;
-    lastName?: string | null;
     groupId?: number | null;
   }
 ) {

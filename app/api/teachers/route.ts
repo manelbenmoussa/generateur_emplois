@@ -24,7 +24,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { userId, firstName, lastName, schoolId, subjectIds } = body;
+    const { userId, schoolId, subjectIds } = body;
 
     if (!schoolId) {
       return NextResponse.json({ error: "Missing schoolId" }, { status: 400 });
@@ -36,8 +36,6 @@ export async function POST(request: Request) {
 
     const created = await teacherDao.createTeacher({
       userId,
-      firstName,
-      lastName,
       schoolId: Number(schoolId),
       subjectIds,
     });

@@ -42,25 +42,15 @@ export async function getTeacherById(
  */
 export async function createTeacher(data: {
   userId: string;
-  firstName?: string | null;
-  lastName?: string | null;
   schoolId: number;
   subjectIds?: number[];
 }) {
   // Create teacher and optionally create subject links
-  const {
-    userId,
-    firstName = null,
-    lastName = null,
-    schoolId,
-    subjectIds,
-  } = data;
+  const { userId, schoolId, subjectIds } = data;
 
   const teacher = await prisma.teacher.create({
     data: {
       userId,
-      firstName,
-      lastName,
       schoolId,
     },
   });
@@ -84,21 +74,10 @@ export async function createTeacher(data: {
 export async function updateTeacher(
   id: number,
   data: {
-    firstName?: string | null;
-    lastName?: string | null;
     subjectIds?: number[] | null; // null means no change, [] means clear
   }
 ) {
-  const { firstName, lastName, subjectIds } = data;
-
-  // Update teacher basic fields
-  await prisma.teacher.update({
-    where: { id },
-    data: {
-      firstName,
-      lastName,
-    },
-  });
+  const { subjectIds } = data;
 
   // If subjectIds is provided, sync the join table
   if (subjectIds !== undefined) {

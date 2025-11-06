@@ -21,9 +21,13 @@ type DatabaseSchool = {
 
 type DatabaseAdministrator = {
   id: number;
-  username: string;
-  passwordHash: string;
+  userId: string;
   schoolId: number;
+  user?: {
+    id: string;
+    name?: string | null;
+    email: string;
+  };
 };
 
 type DatabaseDepartment = {
@@ -47,9 +51,13 @@ type DatabaseSpecialization = {
 
 type DatabaseTeacher = {
   id: number;
-  lastName?: string | null;
-  firstName?: string | null;
+  userId: string;
   schoolId: number;
+  user?: {
+    id: string;
+    name?: string | null;
+    email: string;
+  };
   // When joined with expertSubjects
   expertSubjects?: Array<{ subjectId?: number; subject_id?: number }>;
 };
@@ -83,8 +91,7 @@ export interface SchoolDto {
 
 export interface AdministratorDto {
   id: number;
-  username: string;
-  // email is optional and sanitized
+  name?: string | null;
   email?: string | null;
 }
 
@@ -106,8 +113,7 @@ export interface SpecializationDto {
 
 export interface TeacherDto {
   id: number;
-  firstName?: string | null;
-  lastName?: string | null;
+  name?: string | null;
   email?: string | null;
   // list of subject ids the teacher is specialized in (populated when DAO includes join)
   specializedSubjectIds?: number[];
@@ -168,8 +174,8 @@ export function mapSchool(raw: DatabaseSchool): SchoolDto {
 export function mapAdministrator(raw: DatabaseAdministrator): AdministratorDto {
   return {
     id: raw.id,
-    username: raw.username,
-    // email is not on the prisma model
+    name: raw.user?.name,
+    email: raw.user?.email,
   };
 }
 
@@ -225,9 +231,8 @@ export function mapTeacher(raw: DatabaseTeacher): TeacherDto {
 
   return {
     id: raw.id,
-    firstName: raw.firstName,
-    lastName: raw.lastName,
-    // email is not on the prisma model
+    name: raw.user?.name,
+    email: raw.user?.email,
     specializedSubjectIds: specializedSubjectIds.length
       ? specializedSubjectIds
       : undefined,

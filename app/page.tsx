@@ -75,12 +75,34 @@ export default function HomePage() {
             universities.
           </p>
           {session ? (
-            <Link
-              href="/generator"
-              className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-            >
-              Go to Generator
-            </Link>
+            <div className="flex gap-4 justify-center">
+              {session.user?.role === "ADMIN" && (
+                <>
+                  <Link
+                    href="/admin"
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                  >
+                    Go to Admin Dashboard
+                  </Link>
+                </>
+              )}
+              {session.user?.role === "TEACHER" && (
+                <Link
+                  href="/teacher"
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                >
+                  Go to Teacher Dashboard
+                </Link>
+              )}
+              {session.user?.role === "STUDENT" && (
+                <Link
+                  href="/student"
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                >
+                  Go to Student Dashboard
+                </Link>
+              )}
+            </div>
           ) : (
             <Link
               href="/auth/signin"

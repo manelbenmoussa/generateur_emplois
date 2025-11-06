@@ -34,11 +34,9 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const { firstName, lastName, groupId } = body;
+    const { groupId } = body;
 
     const updated = await studentDao.updateStudent(id, {
-      firstName,
-      lastName,
       groupId:
         groupId === undefined
           ? undefined

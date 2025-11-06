@@ -6,7 +6,7 @@ import { createStudent } from "@/dao/studentDao";
 /**
  * POST /api/users/[userId]/link-student
  * Create a student profile and link it to the user
- * Body: { schoolId: number, firstName?: string, lastName?: string, groupId?: number }
+ * Body: { schoolId: number, groupId?: number }
  */
 export async function POST(
   request: NextRequest,
@@ -26,7 +26,7 @@ export async function POST(
 
     const { userId } = params;
     const body = await request.json();
-    const { schoolId, firstName, lastName, groupId } = body;
+    const { schoolId, groupId } = body;
 
     if (!schoolId) {
       return NextResponse.json(
@@ -39,8 +39,6 @@ export async function POST(
     const student = await createStudent({
       userId,
       schoolId,
-      firstName,
-      lastName,
       groupId,
     });
 

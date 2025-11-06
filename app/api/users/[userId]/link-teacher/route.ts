@@ -6,7 +6,7 @@ import { createTeacher } from "@/dao/teacherDao";
 /**
  * POST /api/users/[userId]/link-teacher
  * Create a teacher profile and link it to the user
- * Body: { schoolId: number, firstName?: string, lastName?: string, subjectIds?: number[] }
+ * Body: { schoolId: number, subjectIds?: number[] }
  */
 export async function POST(
   request: NextRequest,
@@ -26,7 +26,7 @@ export async function POST(
 
     const { userId } = params;
     const body = await request.json();
-    const { schoolId, firstName, lastName, subjectIds } = body;
+    const { schoolId, subjectIds } = body;
 
     if (!schoolId) {
       return NextResponse.json(
@@ -39,8 +39,6 @@ export async function POST(
     const teacher = await createTeacher({
       userId,
       schoolId,
-      firstName,
-      lastName,
       subjectIds,
     });
 

@@ -23,7 +23,7 @@ export async function GET(
 }
 
 // PATCH /api/teachers/:id
-// body: { firstName?, lastName?, expertSubjectIds? }
+// body: { expertSubjectIds? }
 export async function PATCH(
   request: Request,
   { params }: { params: { id: string } }
@@ -35,11 +35,9 @@ export async function PATCH(
     }
 
     const body = (await request.json()) as {
-      firstName?: string | null;
-      lastName?: string | null;
       expertSubjectIds?: number[] | null;
     };
-    const { firstName, lastName, expertSubjectIds } = body;
+    const { expertSubjectIds } = body;
 
     // The DAO expects `subjectIds`. Allow clients to send `expertSubjectIds` and
     // map it to the DAO shape. undefined -> no change, null -> clear, array -> set
@@ -51,8 +49,6 @@ export async function PATCH(
         : null;
 
     const updated = await teacherDao.updateTeacher(id, {
-      firstName,
-      lastName,
       subjectIds,
     });
 

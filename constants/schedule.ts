@@ -23,9 +23,7 @@ export const TIME_SLOTS: TimeSlot[] = [
   { startTime: "13:30", endTime: "15:00" },
   { startTime: "15:15", endTime: "16:45" },
   { startTime: "16:45", endTime: "18:15" },
-  { startTime: "18:15", endTime: "19:45" },
-
 ];
 
-export const MAX_TEACHER_HOURS = 16.0;
+export const MAX_TEACHER_HOURS = 25.0;
 export const MAX_WEEKLY_SLOTS = DAYS.length * TIME_SLOTS.length;

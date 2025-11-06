@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
 import * as adminDao from "@/dao/administratorDao";
+import { Administrator } from "@/types/entities";
+
+interface CreateAdministratorRequest {
+  userId: string;
+  schoolId: number;
+}
 
 // GET /api/administrators?schoolId=1
 export async function GET(request: Request) {
@@ -12,7 +18,9 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Invalid schoolId" }, { status: 400 });
     }
 
-    const admins = await adminDao.getAdministratorsBySchool(schoolId);
+    const admins: Administrator[] = await adminDao.getAdministratorsBySchool(
+      schoolId
+    );
     return NextResponse.json({ administrators: admins });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
@@ -21,19 +29,18 @@ export async function GET(request: Request) {
 }
 
 // POST /api/administrators
-// body: { username, passwordHash, schoolId }
+// body: { userId, schoolId }
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as any;
-    const { username, passwordHash, schoolId } = body;
+    const body = (await request.json()) as CreateAdministratorRequest;
+    const { userId, schoolId } = body;
 
-    if (!username || !passwordHash || !schoolId) {
+    if (!userId || !schoolId) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    const created = await adminDao.createAdministrator({
-      username,
-      passwordHash,
+    const created: Administrator = await adminDao.createAdministrator({
+      userId,
       schoolId: Number(schoolId),
     });
 

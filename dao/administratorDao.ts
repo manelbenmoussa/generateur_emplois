@@ -4,31 +4,53 @@ import prisma from "./db";
 export async function getAdministratorsBySchool(
   schoolId: number
 ): Promise<Administrator[]> {
-  return prisma.administrator.findMany({ where: { schoolId } });
+  return prisma.administrator.findMany({
+    where: { schoolId },
+    include: {
+      user: true,
+      school: true,
+    },
+  });
 }
 
 export async function getAdministratorById(
   id: number
 ): Promise<Administrator | null> {
-  return prisma.administrator.findUnique({ where: { id } });
+  return prisma.administrator.findUnique({
+    where: { id },
+    include: {
+      user: true,
+      school: true,
+    },
+  });
 }
 
 export async function createAdministrator(data: {
-  username: string;
-  passwordHash: string;
+  userId: string;
   schoolId: number;
 }) {
-  const { username, passwordHash, schoolId } = data;
+  const { userId, schoolId } = data;
   return prisma.administrator.create({
-    data: { username, passwordHash, schoolId },
+    data: { userId, schoolId },
+    include: {
+      user: true,
+      school: true,
+    },
   });
 }
 
 export async function updateAdministrator(
   id: number,
-  data: { username?: string; passwordHash?: string }
+  data: { schoolId?: number }
 ) {
-  return prisma.administrator.update({ where: { id }, data });
+  return prisma.administrator.update({
+    where: { id },
+    data,
+    include: {
+      user: true,
+      school: true,
+    },
+  });
 }
 
 export async function deleteAdministrator(id: number) {

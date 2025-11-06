@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface PdfSession {
   id: number | string;
@@ -23,9 +25,20 @@ interface TimetableResult {
 }
 
 export default function Home() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<TimetableResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Redirect non-admin users
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/auth/signin");
+    } else if (session?.user?.role !== "ADMIN") {
+      router.push("/");
+    }
+  }, [session, status, router]);
 
   const handleGenerateTimetable = async () => {
     setLoading(true);
@@ -47,6 +60,15 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  // Show loading while checking authentication
+  if (status === "loading" || session?.user?.role !== "ADMIN") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900">
+        <div className="text-lg text-white">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-8">
