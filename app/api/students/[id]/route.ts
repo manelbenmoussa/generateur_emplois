@@ -63,8 +63,20 @@ export async function DELETE(
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
     }
 
+    // Get the student first to find the userId
+    const student = await studentDao.getStudentById(id);
+    if (!student) {
+      return NextResponse.json({ error: "Student not found" }, { status: 404 });
+    }
+
+    // Delete the student record first (due to foreign key constraint)
     await studentDao.deleteStudent(id);
-    return NextResponse.json({ success: true }, { status: 204 });
+
+    // Then delete the user account
+    const prisma = (await import("@/dao/db")).default;
+    await prisma.user.delete({ where: { id: student.userId } });
+
+    return NextResponse.json({ success: true });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error: message }, { status: 500 });

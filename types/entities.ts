@@ -33,7 +33,11 @@ export interface Subject {
   id: number;
   name: string;
   hourVolume: string | number; // DB uses decimal stored as string by PG client sometimes
-  schoolId: number;
+  departmentId: number;
+  department?: {
+    id: number;
+    name: string;
+  };
 }
 
 export interface Group {

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/dao/db";
 
 // GET /api/schools - Get all schools
 export async function GET() {

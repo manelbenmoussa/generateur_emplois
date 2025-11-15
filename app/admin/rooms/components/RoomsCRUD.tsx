@@ -59,6 +59,11 @@ export default function RoomsCRUD() {
     if (schoolId) {
       fetchRooms();
       fetchDepartments();
+    } else {
+      setLoading(false);
+      setError(
+        "No school associated with your account. Please contact support."
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [schoolId]);
