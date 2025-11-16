@@ -4,11 +4,15 @@ import prisma from "./db";
 export async function getSubjectsBySchool(
   schoolId: number
 ): Promise<Subject[]> {
-  // Subjects belong to Department, which belongs to School
+  // Subjects are associated to teachers, and teachers are associated to school
   return prisma.subject.findMany({
     where: {
-      department: {
-        schoolId,
+      teachers: {
+        some: {
+          teacher: {
+            schoolId,
+          },
+        },
       },
     },
   });

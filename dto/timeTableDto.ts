@@ -1,3 +1,4 @@
+import type { Decimal } from "@prisma/client/runtime/library";
 import * as schoolDao from "../dao/schoolDao";
 import * as administratorDao from "../dao/administratorDao";
 import * as departmentDao from "../dao/departmentDao";
@@ -39,8 +40,7 @@ type DatabaseDepartment = {
 type DatabaseSubject = {
   id: number;
   name: string;
-  hourVolume: unknown; // Prisma Decimal type
-  departmentId: number;
+  hourVolume: Decimal;
 };
 
 type DatabaseSpecialization = {
@@ -154,12 +154,14 @@ export interface AssembledPayloadDto {
 function toNumber(v: unknown): number | null {
   if (v == null) return null;
   // handle Prisma Decimal
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const anyV: any = v;
-  if (typeof anyV === "object" && typeof anyV.toNumber === "function") {
-    return anyV.toNumber();
+  if (
+    typeof v === "object" &&
+    v !== null &&
+    typeof (v as Decimal).toNumber === "function"
+  ) {
+    return (v as Decimal).toNumber();
   }
-  const n = Number(anyV);
+  const n = Number(v);
   return Number.isNaN(n) ? null : n;
 }
 // mappers: pick and normalize only the fields algorithm needs
@@ -334,6 +336,6 @@ export function transformDataForAlgorithm(
     teachers: idMapper(payload.teachers),
     groups: idMapper(payload.groups),
     rooms: idMapper(payload.rooms),
-    sessions: payload.sessions, // sessions are not mapped by id, they are the list of events to schedule
+    sessions: payload.sessions,
   };
 }

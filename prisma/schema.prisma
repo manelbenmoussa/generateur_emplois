@@ -99,7 +99,6 @@ model Department {
   name           String 
   school         School          @relation(fields: [schoolId], references: [id])
   schoolId       Int             @map("school_id")
-  subjects       Subject[]
   specializations Specialization[]
   rooms          Room[]
 }
@@ -108,8 +107,6 @@ model Subject {
   id              Int                     @id @default(autoincrement())
   name            String
   hourVolume      Decimal                 @map("hour_volume") @db.Decimal(3, 1)
-  department      Department              @relation(fields: [departmentId], references: [id])
-  departmentId    Int                     @map("department_id")
   sessions        Session[]
   teachers        TeacherSubject[]
 }
@@ -123,6 +120,9 @@ model Teacher {
   // Link to User account
   user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String           @unique @map("user_id")
+  
+  // Sessions assigned to this teacher (populated after scheduling)
+  sessions   Session[]
 }
 
 // Teacher "can teach" Subject (many-to-many)
@@ -162,6 +162,20 @@ model Session {
   subjectId Int            @map("subject_id")
   group     Group          @relation(fields: [groupId], references: [id])
   groupId   Int            @map("group_id")
+  
+  // Optional assigned teacher (set after scheduling)
+  teacher   Teacher?       @relation(fields: [teacherId], references: [id])
+  teacherId Int?           @map("teacher_id")
+
+  // Optional assigned room (set after scheduling)
+  room      Room?          @relation(fields: [roomId], references: [id])
+  roomId    Int?           @map("room_id")
+
+  // Scheduled slot assigned by the timetable generator:
+  // - scheduled_weekday: text like 'MONDAY', 'TUESDAY' etc.
+  // - scheduled_time: time of day in 24h format 'HH:MM'
+  scheduled_weekday String? @map("scheduled_weekday")
+  scheduled_time    String? @map("scheduled_time")
 
   @@map("sessions")
 }
@@ -174,6 +188,9 @@ model Room {
   schoolId     Int         @map("school_id")
   department   Department? @relation(fields: [departmentId], references: [id])
   departmentId Int?        @map("department_id")
+
+  // Sessions assigned to this room
+  sessions     Session[]
 
   @@unique([name, schoolId], name: "unique_room_name_per_school")
   @@map("rooms")

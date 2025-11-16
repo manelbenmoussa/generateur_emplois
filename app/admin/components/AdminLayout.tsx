@@ -5,6 +5,7 @@ import AdminSidebar from "./AdminSidebar";
 import DashboardView from "./DashboardView";
 import TimetableGenerator from "./TimetableGenerator";
 import RoomsCRUD from "../rooms/components/RoomsCRUD";
+import SessionsCRUD from "./SessionsCRUD";
 
 interface AdminLayoutProps {
   userName?: string | null;
@@ -12,7 +13,7 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ userName }: AdminLayoutProps) {
   const [activeView, setActiveView] = useState<
-    "dashboard" | "generator" | "rooms"
+    "dashboard" | "generator" | "rooms" | "sessions"
   >("dashboard");
 
   return (
@@ -24,6 +25,7 @@ export default function AdminLayout({ userName }: AdminLayoutProps) {
           {activeView === "dashboard" && <DashboardView userName={userName} />}
           {activeView === "generator" && <TimetableGenerator />}
           {activeView === "rooms" && <RoomsCRUD />}
+          {activeView === "sessions" && <SessionsCRUD />}
         </section>
       </main>
     </div>

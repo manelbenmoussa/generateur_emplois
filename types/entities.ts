@@ -49,6 +49,8 @@ export interface Session {
   subjectId: number | null;
   teacherId: number | null;
   groupId: number | null;
+  scheduled_weekday?: string | null; // e.g. 'MONDAY'
+  scheduled_time?: string | null;
 }
 
 export interface Student {

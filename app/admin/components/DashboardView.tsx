@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SessionsCRUD from "./SessionsCRUD";
 
 interface DashboardViewProps {
   userName?: string | null;
@@ -226,6 +227,14 @@ export default function DashboardView({ userName }: DashboardViewProps) {
         <div className="stat-card">
           <h4>Scheduled Sessions</h4>
           <p className="count">—</p>
+        </div>
+      </div>
+
+      {/* Sessions CRUD section on dashboard */}
+      <div className="mt-12">
+        <h2 className="text-2xl font-bold text-white mb-6">Manage Sessions</h2>
+        <div className="bg-white/10 rounded-2xl p-6 shadow-lg">
+          <SessionsCRUD />
         </div>
       </div>
     </>

@@ -160,21 +160,26 @@ export default function RoomsCRUD() {
   };
 
   const handleDeleteDept = async (id: number) => {
-    if (
-      !confirm(
-        "Are you sure you want to delete this department? Rooms in this department will become unassigned."
-      )
-    )
+    // Check if any room is assigned to this department
+    const hasRooms = rooms.some((room) => room.departmentId === id);
+    if (hasRooms) {
+      setError(
+        "Impossible to delete: This department is assigned to one or more rooms. Please reassign or delete those rooms first."
+      );
       return;
-
+    }
+    // If no rooms assigned, delete directly (no extra confirmation)
     try {
       const response = await fetch(`/api/departments?id=${id}`, {
         method: "DELETE",
       });
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || "Failed to delete department");
+        // If backend returns a generic error, show the real reason if we know it
+        setError(
+          "Impossible to delete: This department is assigned to one or more rooms. Please reassign or delete those rooms first."
+        );
+        return;
       }
 
       await fetchDepartments();

@@ -3,8 +3,10 @@
 import Link from "next/link";
 
 interface AdminSidebarProps {
-  activeView: "dashboard" | "generator" | "rooms";
-  onViewChange: (view: "dashboard" | "generator" | "rooms") => void;
+  activeView: "dashboard" | "generator" | "rooms" | "sessions";
+  onViewChange: (
+    view: "dashboard" | "generator" | "rooms" | "sessions"
+  ) => void;
 }
 
 export default function AdminSidebar({
@@ -39,12 +41,14 @@ export default function AdminSidebar({
           >
             🏫 Rooms
           </button>
-          <Link
-            href="/admin/sessions"
-            className="text-white/90 hover:text-white transition hover:underline"
+          <button
+            onClick={() => onViewChange("sessions")}
+            className={`text-left text-white/90 hover:text-white transition hover:underline ${
+              activeView === "sessions" ? "font-bold text-white" : ""
+            }`}
           >
             📅 Sessions
-          </Link>
+          </button>
           <Link
             href="/admin/subjects"
             className="text-white/90 hover:text-white transition hover:underline"

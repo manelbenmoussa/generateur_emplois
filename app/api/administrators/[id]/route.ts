@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import * as adminDao from "@/dao/administratorDao";
+import { Administrator } from "@/types/entities";
 
 export async function GET(
   request: Request,
@@ -7,7 +8,7 @@ export async function GET(
 ) {
   try {
     const id = Number(params.id);
-    if (!id || Number.isNaN(id)) {
+    if (!Number.isInteger(id) || id <= 0) {
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
     }
 
@@ -27,17 +28,33 @@ export async function PATCH(
 ) {
   try {
     const id = Number(params.id);
-    if (!id || Number.isNaN(id)) {
+    if (!Number.isInteger(id) || id <= 0) {
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
     }
 
-    const body = (await request.json()) as any;
-    const { username, passwordHash } = body;
+    const raw = (await request.json()) as Partial<Administrator> | undefined;
+    if (!raw || typeof raw !== "object") {
+      return NextResponse.json(
+        { error: "Invalid request body" },
+        { status: 400 }
+      );
+    }
 
-    const updated = await adminDao.updateAdministrator(id, {
-      username,
-      passwordHash,
-    });
+    // Only allow updating the administrator's school association here
+    const { schoolId } = raw as Partial<Administrator>;
+    const updates: Partial<Administrator> = {};
+    if (schoolId !== undefined) {
+      const schoolIdNum = Number(schoolId);
+      if (!Number.isInteger(schoolIdNum) || schoolIdNum <= 0) {
+        return NextResponse.json(
+          { error: "Invalid schoolId" },
+          { status: 400 }
+        );
+      }
+      updates.schoolId = schoolIdNum;
+    }
+
+    const updated = await adminDao.updateAdministrator(id, updates);
     return NextResponse.json({ administrator: updated });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
