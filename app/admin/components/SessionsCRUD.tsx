@@ -11,7 +11,7 @@ type RawTeacher = {
   id: number;
   user?: { name?: string | null } | null;
 };
-type RawSession = {
+export type RawSession = {
   id: number;
   subjectId?: number | null;
   subject?: { name?: string | null } | null;
