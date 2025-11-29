@@ -3,9 +3,21 @@
 import Link from "next/link";
 
 interface AdminSidebarProps {
-  activeView: "dashboard" | "generator" | "rooms" | "sessions";
+  activeView:
+    | "dashboard"
+    | "generator"
+    | "rooms"
+    | "sessions"
+    | "students"
+    | "subjects";
   onViewChange: (
-    view: "dashboard" | "generator" | "rooms" | "sessions"
+    view:
+      | "dashboard"
+      | "generator"
+      | "rooms"
+      | "sessions"
+      | "students"
+      | "subjects"
   ) => void;
 }
 
@@ -49,24 +61,28 @@ export default function AdminSidebar({
           >
             📅 Sessions
           </button>
-          <Link
-            href="/admin/subjects"
-            className="text-white/90 hover:text-white transition hover:underline"
+          <button
+            onClick={() => onViewChange("subjects")}
+            className={`text-left text-white/90 hover:text-white transition hover:underline ${
+              activeView === "subjects" ? "font-bold text-white" : ""
+            }`}
           >
             📚 Subjects
-          </Link>
+          </button>
           <Link
             href="/admin/teachers"
             className="text-white/90 hover:text-white transition hover:underline"
           >
             👨‍🏫 Teachers
           </Link>
-          <Link
-            href="/admin/students"
-            className="text-white/90 hover:text-white transition hover:underline"
+          <button
+            onClick={() => onViewChange("students")}
+            className={`text-left text-white/90 hover:text-white transition hover:underline ${
+              activeView === "students" ? "font-bold text-white" : ""
+            }`}
           >
             👨‍🎓 Students
-          </Link>
+          </button>
           <button
             onClick={() => onViewChange("generator")}
             className={`text-left text-white/90 hover:text-white transition hover:underline ${

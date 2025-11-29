@@ -73,7 +73,8 @@ export async function DELETE(
     }
 
     await adminDao.deleteAdministrator(id);
-    return NextResponse.json({ success: true }, { status: 204 });
+    // Return 200 with success body (204 must not include a body)
+    return NextResponse.json({ success: true });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error: message }, { status: 500 });

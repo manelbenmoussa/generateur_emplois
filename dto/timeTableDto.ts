@@ -1,6 +1,5 @@
 import type { Decimal } from "@prisma/client/runtime/library";
 import * as schoolDao from "../dao/schoolDao";
-import * as administratorDao from "../dao/administratorDao";
 import * as departmentDao from "../dao/departmentDao";
 import * as subjectDao from "../dao/subjectDao";
 import * as specializationDao from "../dao/specializationDao";
@@ -8,6 +7,7 @@ import * as teacherDao from "../dao/teacherDao";
 import * as groupDao from "../dao/groupDao";
 import * as sessionDao from "../dao/sessionDao";
 import * as roomDao from "../dao/roomDao";
+import * as scheduleConfigDao from "../dao/scheduleConfigDao";
 
 /**
  * Generic type definitions for database entities
@@ -18,17 +18,6 @@ type DatabaseSchool = {
   id: number;
   name: string;
   address?: string | null;
-};
-
-type DatabaseAdministrator = {
-  id: number;
-  userId: string;
-  schoolId: number;
-  user?: {
-    id: string;
-    name?: string | null;
-    email: string;
-  };
 };
 
 type DatabaseDepartment = {
@@ -117,6 +106,7 @@ export interface TeacherDto {
   email?: string | null;
   // list of subject ids the teacher is specialized in (populated when DAO includes join)
   specializedSubjectIds?: number[];
+  maxWeeklyHours?: number | null;
 }
 
 export interface GroupDto {
@@ -138,9 +128,14 @@ export interface RoomDto {
   capacity?: number | null;
 }
 
-export interface AssembledPayloadDto {
+export type ScheduleConfigDto = {
+  days: string;
+  timeSlots: string;
+};
+
+export type AssembledPayloadDto = {
   school: SchoolDto | null;
-  administrators: AdministratorDto[];
+  scheduleConfig: ScheduleConfigDto | null;
   departments: DepartmentDto[];
   subjects: SubjectDto[];
   specializations: SpecializationDto[];
@@ -148,7 +143,7 @@ export interface AssembledPayloadDto {
   groups: GroupDto[];
   sessions: SessionDto[];
   rooms: RoomDto[];
-}
+};
 
 // small helpers
 function toNumber(v: unknown): number | null {
@@ -170,14 +165,6 @@ export function mapSchool(raw: DatabaseSchool): SchoolDto {
   return {
     name: raw.name,
     address: raw.address,
-  };
-}
-
-export function mapAdministrator(raw: DatabaseAdministrator): AdministratorDto {
-  return {
-    id: raw.id,
-    name: raw.user?.name,
-    email: raw.user?.email,
   };
 }
 
@@ -214,6 +201,7 @@ export function mapTeacher(raw: DatabaseTeacher): TeacherDto {
   const typed = raw as unknown as {
     expertSubjects?: SpecializationRow[];
     subjects?: SpecializationRow[];
+    maxWeeklyHours?: number | null;
   };
 
   const joinRows = Array.isArray(typed.expertSubjects)
@@ -238,6 +226,8 @@ export function mapTeacher(raw: DatabaseTeacher): TeacherDto {
     specializedSubjectIds: specializedSubjectIds.length
       ? specializedSubjectIds
       : undefined,
+    maxWeeklyHours:
+      (raw as { maxWeeklyHours?: number | null }).maxWeeklyHours ?? null,
   };
 }
 
@@ -281,7 +271,7 @@ export async function assembleAllEntitiesForSchool(
 ): Promise<AssembledPayloadDto> {
   const [
     schoolRaw,
-    administratorsRaw,
+    scheduleConfigRaw,
     departmentsRaw,
     subjectsRaw,
     specializationsRaw,
@@ -291,7 +281,7 @@ export async function assembleAllEntitiesForSchool(
     roomsRaw,
   ] = await Promise.all([
     (await schoolDao.getSchoolById(schoolId)) || null,
-    administratorDao.getAdministratorsBySchool(schoolId),
+    scheduleConfigDao.getScheduleConfigBySchool(schoolId),
     departmentDao.getDepartmentsBySchool(schoolId),
     subjectDao.getSubjectsBySchool(schoolId),
     specializationDao.getSpecializationsBySchool(schoolId),
@@ -301,9 +291,13 @@ export async function assembleAllEntitiesForSchool(
     roomDao.getRoomsBySchool(schoolId),
   ]);
 
+  const scheduleConfig = scheduleConfigRaw
+    ? { days: scheduleConfigRaw.days, timeSlots: scheduleConfigRaw.timeSlots }
+    : null;
+
   return {
     school: schoolRaw ? mapSchool(schoolRaw) : null,
-    administrators: (administratorsRaw ?? []).map(mapAdministrator),
+    scheduleConfig,
     departments: (departmentsRaw ?? []).map(mapDepartment),
     subjects: (subjectsRaw ?? []).map(mapSubject),
     specializations: (specializationsRaw ?? []).map(mapSpecialization),

@@ -18,6 +18,7 @@ export async function getTeachersBySchool(
       subjects: true,
       user: true,
     },
+    // Explicitly select maxWeeklyHours (included by default, but for clarity)
   });
 }
 
@@ -33,6 +34,7 @@ export async function getTeacherById(
       subjects: true,
       user: true,
     },
+    // Explicitly select maxWeeklyHours (included by default, but for clarity)
   });
 }
 

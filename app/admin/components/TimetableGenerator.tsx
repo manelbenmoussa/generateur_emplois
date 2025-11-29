@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface PdfSession {
   id: number | string;
@@ -22,10 +22,29 @@ interface TimetableResult {
   };
 }
 
+interface TimeSlot {
+  startTime: string;
+  endTime: string;
+}
+
+interface ScheduleConfig {
+  days: string[];
+  timeSlots: TimeSlot[];
+}
+
 export default function TimetableGenerator() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<TimetableResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [scheduleConfig, setScheduleConfig] = useState<ScheduleConfig | null>(
+    null
+  );
+  const [days, setDays] = useState<string[]>([]);
+  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
+  const [newDay, setNewDay] = useState<string>("");
+  const [newSlotStart, setNewSlotStart] = useState<string>("");
+  const [newSlotEnd, setNewSlotEnd] = useState<string>("");
+  const [info, setInfo] = useState<string | null>(null);
 
   const handleGenerateTimetable = async () => {
     setLoading(true);
@@ -48,6 +67,62 @@ export default function TimetableGenerator() {
     }
   };
 
+  // Fetch current schedule config on mount
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/schedule-config");
+        if (!res.ok) return;
+        const json = (await res.json()) as { scheduleConfig?: ScheduleConfig };
+        setScheduleConfig(json.scheduleConfig ?? null);
+        if (json.scheduleConfig) {
+          setDays(
+            Array.isArray(json.scheduleConfig.days)
+              ? json.scheduleConfig.days
+              : []
+          );
+          setTimeSlots(
+            Array.isArray(json.scheduleConfig.timeSlots)
+              ? json.scheduleConfig.timeSlots
+              : []
+          );
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+  }, []);
+
+  const handleSaveScheduleConfig = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      // use structured days/timeSlots instead of raw JSON
+      if (!Array.isArray(days) || days.length === 0) {
+        throw new Error("Please add at least one day.");
+      }
+      if (!Array.isArray(timeSlots) || timeSlots.length === 0) {
+        throw new Error("Please add at least one time slot.");
+      }
+      const res = await fetch("/api/schedule-config", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ days, timeSlots }),
+      });
+      const data = (await res.json()) as {
+        scheduleConfig?: ScheduleConfig;
+        error?: string;
+      };
+      if (!res.ok) throw new Error(data.error || "Failed to save");
+      setScheduleConfig({ days, timeSlots });
+      setInfo("Schedule config saved.");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="mb-6">
@@ -61,6 +136,170 @@ export default function TimetableGenerator() {
 
       {/* Main Generator Card */}
       <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl p-8 mb-8">
+        {/* Schedule configuration editor */}
+        <div className="mb-6">
+          <h4 className="text-lg font-semibold text-white">Schedule Config</h4>
+          <p className="text-sm text-gray-300 mb-2">
+            Adjust weekdays and time slots used by the generator.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm text-gray-300">Days</label>
+              <div className="flex gap-2 items-center mb-2">
+                <input
+                  value={newDay}
+                  placeholder="e.g. Monday"
+                  onChange={(e) => setNewDay(e.target.value)}
+                  className="px-2 py-1 rounded bg-white/5 text-white flex-1"
+                />
+                <button
+                  onClick={() => {
+                    if (!newDay.trim()) return;
+                    if (days.includes(newDay.trim())) {
+                      setError("Day already added");
+                      return;
+                    }
+                    setDays((d) => [...d, newDay.trim()]);
+                    setNewDay("");
+                    setError(null);
+                  }}
+                  className="px-3 py-1 bg-green-600 rounded text-white"
+                >
+                  Add
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {days.map((d) => (
+                  <div
+                    key={d}
+                    className="px-3 py-1 rounded bg-white/5 text-white flex items-center gap-2"
+                  >
+                    <span>{d}</span>
+                    <button
+                      onClick={() =>
+                        setDays((prev) => prev.filter((x) => x !== d))
+                      }
+                      className="text-red-400"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm text-gray-300">Time Slots</label>
+              <div className="flex gap-2 items-center mb-2">
+                <input
+                  value={newSlotStart}
+                  onChange={(e) => setNewSlotStart(e.target.value)}
+                  placeholder="Start e.g. 08:15"
+                  className="px-2 py-1 rounded bg-white/5 text-white w-1/2"
+                />
+                <input
+                  value={newSlotEnd}
+                  onChange={(e) => setNewSlotEnd(e.target.value)}
+                  placeholder="End e.g. 09:45"
+                  className="px-2 py-1 rounded bg-white/5 text-white w-1/2"
+                />
+                <button
+                  onClick={() => {
+                    const start = newSlotStart.trim();
+                    const end = newSlotEnd.trim();
+                    const timeRegex = /^\d{2}:\d{2}$/;
+                    if (!timeRegex.test(start) || !timeRegex.test(end)) {
+                      setError("Invalid time format, use HH:MM");
+                      return;
+                    }
+                    // ensure start < end
+                    const toMinutes = (t: string) => {
+                      const [h, m] = t.split(":");
+                      return Number(h) * 60 + Number(m);
+                    };
+                    if (toMinutes(start) >= toMinutes(end)) {
+                      setError("Start time must be before end time");
+                      return;
+                    }
+                    setTimeSlots((ts) => [
+                      ...ts,
+                      { startTime: start, endTime: end },
+                    ]);
+                    setNewSlotStart("");
+                    setNewSlotEnd("");
+                    setError(null);
+                  }}
+                  className="px-3 py-1 bg-green-600 rounded text-white"
+                >
+                  Add
+                </button>
+              </div>
+              <div className="space-y-2">
+                {timeSlots.map((slot, idx) => (
+                  <div
+                    key={`${slot.startTime}-${slot.endTime}-${idx}`}
+                    className="flex items-center justify-between bg-white/5 p-2 rounded"
+                  >
+                    <div>
+                      {slot.startTime} — {slot.endTime}
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() =>
+                          setTimeSlots((prev) =>
+                            prev.filter((_, i) => i !== idx)
+                          )
+                        }
+                        className="text-red-400"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-2 mt-3">
+            <button
+              onClick={handleSaveScheduleConfig}
+              className="px-4 py-2 bg-yellow-600 text-white rounded"
+            >
+              Save Schedule Config
+            </button>
+            <button
+              onClick={() => {
+                setDays([
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                ]);
+                setTimeSlots([
+                  { startTime: "08:15", endTime: "09:45" },
+                  { startTime: "10:00", endTime: "11:30" },
+                ]);
+              }}
+              className="px-4 py-2 bg-indigo-600 text-white rounded"
+            >
+              Load Defaults
+            </button>
+          </div>
+          {/* Inline validation / info */}
+          {error && <p className="mt-3 text-sm text-red-300">{error}</p>}
+          {info && <p className="mt-3 text-sm text-green-300">{info}</p>}
+          {/* Preview of current config so the user sees the saved state */}
+          {scheduleConfig && (
+            <div className="mt-4 p-3 bg-white/5 rounded">
+              <div className="text-sm text-gray-300">
+                Saved days: {JSON.stringify(scheduleConfig.days)}
+              </div>
+              <div className="text-sm text-gray-300">
+                Saved time slots: {JSON.stringify(scheduleConfig.timeSlots)}
+              </div>
+            </div>
+          )}
+        </div>
         <div className="flex flex-col items-center gap-6">
           {/* Generate Button */}
           <button

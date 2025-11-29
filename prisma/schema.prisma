@@ -82,6 +82,7 @@ model School {
   students        Student[]
   departments     Department[]
   rooms           Room[]
+  scheduleConfig  ScheduleConfig?
 }
 
 model Administrator {
@@ -121,9 +122,23 @@ model Teacher {
   user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String           @unique @map("user_id")
   
+  // New: max hours per week for this teacher
+  maxWeeklyHours Float?
+
   // Sessions assigned to this teacher (populated after scheduling)
   sessions   Session[]
 }
+
+// Per-school schedule configuration (days, time slots, etc.)
+model ScheduleConfig {
+  id         Int    @id @default(autoincrement())
+  school     School @relation(fields: [schoolId], references: [id])
+  schoolId   Int    @unique
+  days       String // JSON stringified array, e.g. '["Monday","Tuesday",...]'
+  timeSlots  String // JSON stringified array of objects, e.g. '[{"startTime":"08:15","endTime":"09:45"}, ...]'
+  // Add more config fields as needed
+}
+
 
 // Teacher "can teach" Subject (many-to-many)
 model TeacherSubject {

@@ -6,6 +6,8 @@ import DashboardView from "./DashboardView";
 import TimetableGenerator from "./TimetableGenerator";
 import RoomsCRUD from "../rooms/components/RoomsCRUD";
 import SessionsCRUD from "./SessionsCRUD";
+import StudentsCRUD from "../students/components/StudentsCRUD";
+import SubjectsCRUD from "../subjects/components/SubjectsCRUD";
 
 interface AdminLayoutProps {
   userName?: string | null;
@@ -13,7 +15,7 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ userName }: AdminLayoutProps) {
   const [activeView, setActiveView] = useState<
-    "dashboard" | "generator" | "rooms" | "sessions"
+    "dashboard" | "generator" | "rooms" | "sessions" | "students" | "subjects"
   >("dashboard");
 
   return (
@@ -26,6 +28,8 @@ export default function AdminLayout({ userName }: AdminLayoutProps) {
           {activeView === "generator" && <TimetableGenerator />}
           {activeView === "rooms" && <RoomsCRUD />}
           {activeView === "sessions" && <SessionsCRUD />}
+          {activeView === "students" && <StudentsCRUD />}
+          {activeView === "subjects" && <SubjectsCRUD />}
         </section>
       </main>
     </div>
