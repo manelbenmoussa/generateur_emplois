@@ -38,7 +38,9 @@ export default function SignInForm() {
   };
 
   const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/" });
+    // Redirect to the role confirmation page after OAuth so new users land
+    // directly on the role confirmation flow instead of home.
+    signIn("google", { callbackUrl: "/auth/confirm-role" });
   };
 
   return (

@@ -62,6 +62,9 @@ export default function SessionsCRUD() {
         return res.json();
       })
       .then((data) => {
+        // Log raw sessions for debugging missing data
+        // eslint-disable-next-line no-console
+        console.debug("/api/sessions ->", data.sessions);
         setSessions(data.sessions || []);
         setError(null);
       })
@@ -106,9 +109,29 @@ export default function SessionsCRUD() {
   );
 
   function openEditModal(session: RawSession) {
+    // Prefill autocomplete/search fields so the modal shows existing values
+    setSelectedSubject(session.subjectId ?? null);
+    setSubjectQuery(session.subject?.name ?? (session.subjectId ? `#${session.subjectId}` : ""));
+    setSelectedGroup(session.groupId ?? null);
+    setGroupQuery(
+      session.group
+        ? `${session.group.specialization?.name ?? ""} ${session.group.level ?? ""}`.trim()
+        : session.groupId
+        ? `#${session.groupId}`
+        : ""
+    );
+    setSelectedTeacher(session.teacher?.id ?? null);
+    setTeacherQuery(session.teacher?.user?.name ?? (session.teacher?.id ? `T${session.teacher.id}` : ""));
     setModal({ type: "edit", session });
   }
   function openAddModal() {
+    // Clear any previous selections when adding a new session
+    setSelectedSubject(null);
+    setSubjectQuery("");
+    setSelectedGroup(null);
+    setGroupQuery("");
+    setSelectedTeacher(null);
+    setTeacherQuery("");
     setModal({ type: "add" });
   }
   function openDelete(id: number) {

@@ -1,15 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+// Logout is available on the home page; settings view does not include logout
 
 interface SettingsViewProps {
   userId?: string;
 }
 
 export default function SettingsView({ userId }: SettingsViewProps) {
-  const router = useRouter();
+  // router not needed since logout is removed from this view
   const [profile, setProfile] = useState({
     name: "",
     email: "",
@@ -75,10 +74,7 @@ export default function SettingsView({ userId }: SettingsViewProps) {
     }
   };
 
-  const handleLogout = async () => {
-    await signOut({ redirect: false });
-    router.push("/auth/signin");
-  };
+  // handleLogout removed — logout is handled on the home page
 
   if (loading) {
     return (
@@ -242,17 +238,7 @@ export default function SettingsView({ userId }: SettingsViewProps) {
         </div>
       </div>
 
-      {/* Logout Button */}
-      <div className="mt-6 bg-red-500/10 backdrop-blur-lg border border-red-500/30 rounded-xl p-6">
-        <h3 className="text-xl font-semibold text-white mb-2">Danger Zone</h3>
-        <p className="text-gray-300 mb-4">Logout from your account</p>
-        <button
-          onClick={handleLogout}
-          className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
-        >
-          🚪 Logout
-        </button>
-      </div>
+      {/* Logout is available on the Home page; removed from settings view */}
     </div>
   );
 }

@@ -33,7 +33,6 @@ export default function StudentsCRUD() {
   const [error, setError] = useState("");
   const [modalError, setModalError] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
@@ -202,49 +201,6 @@ export default function StudentsCRUD() {
     a.click();
   };
 
-  const handleImport = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const file = formData.get("file") as File;
-
-    if (!file) {
-      setError("Please select a file");
-      return;
-    }
-
-    const text = await file.text();
-    const lines = text.split("\n").slice(1); // Skip header
-
-    let successCount = 0;
-    let errorCount = 0;
-
-    for (const line of lines) {
-      if (!line.trim()) continue;
-      const [name, email, groupLevel] = line.split(",").map((s) => s.trim());
-
-      try {
-        const group = groups.find((g) => g.level === groupLevel);
-        await fetch("/api/students", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email,
-            name,
-            schoolId,
-            groupId: group?.id || null,
-          }),
-        });
-        successCount++;
-      } catch {
-        errorCount++;
-      }
-    }
-
-    setIsImportModalOpen(false);
-    await fetchStudents();
-    alert(`Import complete: ${successCount} success, ${errorCount} errors`);
-  };
-
   const handleBulkAssign = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -349,18 +305,6 @@ export default function StudentsCRUD() {
             className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition"
           >
             📥 Export
-          </button>
-          <button
-            onClick={() => setIsImportModalOpen(true)}
-            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition"
-          >
-            📤 Import
-          </button>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-          >
-            + Add Student
           </button>
         </div>
       </div>
@@ -618,43 +562,6 @@ export default function StudentsCRUD() {
                   className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg transition"
                 >
                   {editingStudent ? "Update" : "Create"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Import Modal */}
-      {isImportModalOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 rounded-2xl shadow-2xl border border-white/20 max-w-md w-full p-6">
-            <h3 className="text-2xl font-bold text-white mb-4">
-              Import Students
-            </h3>
-            <p className="text-gray-400 text-sm mb-4">
-              Upload a CSV file with columns: Name, Email, Group
-            </p>
-            <form onSubmit={handleImport} className="space-y-4">
-              <input
-                type="file"
-                name="file"
-                accept=".csv"
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700"
-              />
-              <div className="flex gap-3">
-                <button
-                  type="button"
-                  onClick={() => setIsImportModalOpen(false)}
-                  className="flex-1 px-4 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg transition"
-                >
-                  Import
                 </button>
               </div>
             </form>

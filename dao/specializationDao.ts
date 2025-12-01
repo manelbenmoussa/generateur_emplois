@@ -19,3 +19,24 @@ export async function getSpecializationById(
 ): Promise<Specialization | null> {
   return prisma.specialization.findUnique({ where: { id } });
 }
+
+export async function createSpecialization(data: {
+  name: string;
+  departmentId: number;
+}) {
+  return prisma.specialization.create({ data });
+}
+
+export async function updateSpecialization(
+  id: number,
+  data: {
+    name?: string;
+    departmentId?: number;
+  }
+) {
+  return prisma.specialization.update({ where: { id }, data });
+}
+
+export async function deleteSpecialization(id: number) {
+  return prisma.specialization.delete({ where: { id } });
+}

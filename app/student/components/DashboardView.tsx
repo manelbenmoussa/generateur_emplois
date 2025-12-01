@@ -91,7 +91,6 @@ export default function DashboardView({
         <h2 className="text-3xl font-bold text-white mb-2">
           Welcome, {userName}! 👋
         </h2>
-        <p className="text-gray-300">Here's your overview for today</p>
       </div>
 
       {/* Quick Stats */}

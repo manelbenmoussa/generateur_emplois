@@ -3,7 +3,10 @@ import prisma from "./db";
 
 // Use the generated Prisma payload type for the included join relation.
 export type TeacherWithSubjects = Prisma.TeacherGetPayload<{
-  include: { subjects: true; user: true };
+  include: {
+    subjects: { include: { subject: true } };
+    user: true;
+  };
 }>;
 
 /**
@@ -15,7 +18,11 @@ export async function getTeachersBySchool(
   return prisma.teacher.findMany({
     where: { schoolId },
     include: {
-      subjects: true,
+      subjects: {
+        include: {
+          subject: true,
+        },
+      },
       user: true,
     },
     // Explicitly select maxWeeklyHours (included by default, but for clarity)
@@ -31,7 +38,11 @@ export async function getTeacherById(
   return prisma.teacher.findUnique({
     where: { id },
     include: {
-      subjects: true,
+      subjects: {
+        include: {
+          subject: true,
+        },
+      },
       user: true,
     },
     // Explicitly select maxWeeklyHours (included by default, but for clarity)

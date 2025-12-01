@@ -1,16 +1,29 @@
-import Link from "next/link";
 import SessionsCRUD from "./SessionsCRUD";
 
 interface DashboardViewProps {
   userName?: string | null;
+  onNavigate?: (
+    view:
+      | "dashboard"
+      | "generator"
+      | "rooms"
+      | "sessions"
+      | "students"
+      | "subjects"
+      | "teachers"
+      | "specializations"
+      | "departments"
+  ) => void;
 }
 
-export default function DashboardView({ userName }: DashboardViewProps) {
+export default function DashboardView({
+  userName,
+  onNavigate,
+}: DashboardViewProps) {
   return (
     <>
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-white">Welcome, {userName}</h2>
-        <p className="text-gray-200">Manage your timetable system</p>
       </div>
 
       <style jsx>{`
@@ -148,41 +161,59 @@ export default function DashboardView({ userName }: DashboardViewProps) {
       `}</style>
 
       <div className="cards">
-        <Link href="/admin/rooms" className="nav-card">
+        <button
+          onClick={() => onNavigate?.("rooms")}
+          className="nav-card text-left"
+        >
           <div className="icon">🏫</div>
           <h3>Rooms</h3>
           <p>Manage classrooms, labs, and other facilities</p>
-        </Link>
+        </button>
 
-        <Link href="/admin/sessions" className="nav-card">
+        <button
+          onClick={() => onNavigate?.("sessions")}
+          className="nav-card text-left"
+        >
           <div className="icon">📅</div>
           <h3>Sessions</h3>
           <p>Schedule and organize class sessions</p>
-        </Link>
+        </button>
 
-        <Link href="/admin/subjects" className="nav-card">
+        <button
+          onClick={() => onNavigate?.("subjects")}
+          className="nav-card text-left"
+        >
           <div className="icon">📚</div>
           <h3>Subjects</h3>
           <p>Add and manage course subjects</p>
-        </Link>
+        </button>
 
-        <Link href="/admin/teachers" className="nav-card">
+        <button
+          onClick={() => onNavigate?.("teachers")}
+          className="nav-card text-left"
+        >
           <div className="icon">👨‍🏫</div>
           <h3>Teachers</h3>
           <p>Manage teacher information and assignments</p>
-        </Link>
+        </button>
 
-        <Link href="/admin/students" className="nav-card">
+        <button
+          onClick={() => onNavigate?.("students")}
+          className="nav-card text-left"
+        >
           <div className="icon">👨‍🎓</div>
           <h3>Students</h3>
           <p>Manage student records and enrollments</p>
-        </Link>
+        </button>
 
-        <Link href="/generator" className="nav-card">
+        <button
+          onClick={() => onNavigate?.("generator")}
+          className="nav-card text-left"
+        >
           <div className="icon">⚙️</div>
           <h3>Generate Timetable</h3>
           <p>Create optimized schedules automatically</p>
-        </Link>
+        </button>
       </div>
 
       <div className="details-section">
