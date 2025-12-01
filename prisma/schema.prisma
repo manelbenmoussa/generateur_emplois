@@ -1,0 +1,228 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  password      String?
+  role          UserRole  @default(STUDENT)
+  accounts      Account[]
+  sessions      UserSession[]
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relations to existing models - Auth-first approach
+  administrator Administrator?
+  teacher       Teacher?
+  student       Student?
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model UserSession {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model School {
+  id              Int             @id @default(autoincrement())
+  name            String          @unique
+  address         String?
+  administrators  Administrator[]
+  teachers        Teacher[]
+  students        Student[]
+  departments     Department[]
+  rooms           Room[]
+  scheduleConfig  ScheduleConfig?
+}
+
+model Administrator {
+  id       Int    @id @default(autoincrement())
+  school   School @relation(fields: [schoolId], references: [id])
+  schoolId Int    @map("school_id")
+  
+  // Link to User account
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String @unique @map("user_id")
+}
+
+model Department {
+  id             Int             @id @default(autoincrement())
+  name           String 
+  school         School          @relation(fields: [schoolId], references: [id])
+  schoolId       Int             @map("school_id")
+  specializations Specialization[]
+  rooms          Room[]
+}
+
+model Subject {
+  id              Int                     @id @default(autoincrement())
+  name            String
+  hourVolume      Decimal                 @map("hour_volume") @db.Decimal(3, 1)
+  sessions        Session[]
+  teachers        TeacherSubject[]
+}
+
+model Teacher {
+  id         Int              @id @default(autoincrement())
+  school     School           @relation(fields: [schoolId], references: [id])
+  schoolId   Int              @map("school_id")
+  subjects   TeacherSubject[]
+  
+  // Link to User account
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String           @unique @map("user_id")
+  
+  // New: max hours per week for this teacher
+  maxWeeklyHours Float?
+
+  // Sessions assigned to this teacher (populated after scheduling)
+  sessions   Session[]
+}
+
+// Per-school schedule configuration (days, time slots, etc.)
+model ScheduleConfig {
+  id         Int    @id @default(autoincrement())
+  school     School @relation(fields: [schoolId], references: [id])
+  schoolId   Int    @unique
+  days       String // JSON stringified array, e.g. '["Monday","Tuesday",...]'
+  timeSlots  String // JSON stringified array of objects, e.g. '[{"startTime":"08:15","endTime":"09:45"}, ...]'
+  // Add more config fields as needed
+}
+
+
+// Teacher "can teach" Subject (many-to-many)
+model TeacherSubject {
+  teacherId Int     @map("teacher_id")
+  subjectId Int     @map("subject_id")
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@id([teacherId, subjectId])
+  @@map("teacher_subject")
+}
+
+model Specialization {
+  id           Int                     @id @default(autoincrement())
+  name         String 
+  department   Department              @relation(fields: [departmentId], references: [id])
+  departmentId Int                     @map("department_id")
+  groups       Group[]
+}
+
+
+model Group {
+  id               Int             @id @default(autoincrement())
+  level            String?
+  specialization   Specialization  @relation(fields: [specializationId], references: [id])
+  specializationId Int             @map("specialization_id")
+  directSessions   Session[]
+  students         Student[]
+
+  @@map("groups")
+}
+
+model Session {
+  id        Int            @id @default(autoincrement())
+  subject   Subject        @relation(fields: [subjectId], references: [id])
+  subjectId Int            @map("subject_id")
+  group     Group          @relation(fields: [groupId], references: [id])
+  groupId   Int            @map("group_id")
+  
+  // Optional assigned teacher (set after scheduling)
+  teacher   Teacher?       @relation(fields: [teacherId], references: [id])
+  teacherId Int?           @map("teacher_id")
+
+  // Optional assigned room (set after scheduling)
+  room      Room?          @relation(fields: [roomId], references: [id])
+  roomId    Int?           @map("room_id")
+
+  // Scheduled slot assigned by the timetable generator:
+  // - scheduled_weekday: text like 'MONDAY', 'TUESDAY' etc.
+  // - scheduled_time: time of day in 24h format 'HH:MM'
+  scheduled_weekday String? @map("scheduled_weekday")
+  scheduled_time    String? @map("scheduled_time")
+
+  @@map("sessions")
+}
+
+model Room {
+  id           Int         @id @default(autoincrement())
+  name         String?
+  capacity     Int?
+  school       School      @relation(fields: [schoolId], references: [id])
+  schoolId     Int         @map("school_id")
+  department   Department? @relation(fields: [departmentId], references: [id])
+  departmentId Int?        @map("department_id")
+
+  // Sessions assigned to this room
+  sessions     Session[]
+
+  @@unique([name, schoolId], name: "unique_room_name_per_school")
+  @@map("rooms")
+}
+
+// Students are members of a Group and belong to a School
+model Student {
+  id       Int     @id @default(autoincrement())
+  school   School  @relation(fields: [schoolId], references: [id])
+  schoolId Int     @map("school_id")
+  group    Group?  @relation(fields: [groupId], references: [id])
+  groupId  Int?    @map("group_id")
+  
+  // Link to User account
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String  @unique @map("user_id")
+
+  @@map("students")
+}
+

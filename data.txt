@@ -1,0 +1,1173 @@
+Department : Electrical
+
+🎓 Specialization: AII (Automatisme Informatique Industrielle)
+Department: Computer Science
+
+🧑‍💻 Group AII2.1
+Linear Continuous Control Systems: 4h/week (Prof. Walid BEN YAHIA)
+
+Analog Electronics: 2h/week (Prof. Hatem JEDAY)
+
+🔧 Electrical Lab Workshop (Atelier Lab Elect): 6h/week (Prof. Hatem JEDAY)
+
+Industrial Instrumentation: 2h/week (Prof. Ghizlane FATINE)
+
+🔧 Automatic Control Workshop (Atelier Automatique Ind): 4h/week (Prof. Walid BEN YAHIA)
+
+Power Electronics: 4h/week (Prof. Hassan MOUSSA)
+
+Signal Processing: 2h/week (Prof. Walid BEN YAHIA)
+
+TOEIC English Certification Prep: 4h/week (Prof. Wadi ZOUILI)
+
+Industrial Automation: 4h/week (Prof. Foued MAROUK)
+
+Law: 2h/week (Prof. Said SFAR)
+
+🧑‍💻 Group AII2.2
+Linear Continuous Control Systems: 4.5h/week
+
+Lecture: Prof. M. BOUZID
+
+Tutorial: Prof. FERH SIRDA
+
+Signal Processing: 4.5h/week
+
+Lecture: Prof. M. BOUZID
+
+Tutorial: Prof. FERH SIRDA
+
+🔧 Industrial Automation Workshop (Atelier Automatisme Ind): 3h/week (Instructor: FACT)
+
+🔧 Analog Electronics Workshop (Atelier Electronique Anal): 10.5h/week (Instructor: FACT)
+
+Power Electronics: 4.5h/week
+
+Lecture: Prof. Hossam MOUSSA
+
+Tutorial: Prof. FATHI GHIOUL
+
+Professional Activity Preparation: 1.5h/week (Prof. M. BOUZID)
+
+Law: 1.5h/week (Prof. M. BOUZID)
+
+Technical English: 1.5h/week (Prof. RAMDANI WAFA)
+
+🔧 LabVIEW Workshop (Atelier LABVIEW): 4.5h/week (Prof. Samir BRAHAM SOUHEIB)
+
+🧑‍💻 Group AI13.1
+🔧 Quality and Maintenance Workshop: 1.5h/week (Prof. WASSIM SFEIR)
+
+Real-Time Systems: 1.5h/week (Prof. ZAHRA LAS)
+
+Robotic Systems: 1.5h/week (Prof. ZAHRA LAS)
+
+🔧 Robotic Systems Workshop: 3h/week (Prof. ZAHRA LAS)
+
+Programmable Circuits: 1.5h/week (Prof. MOHAMED FETHI CHATENI)
+
+🔧 Programmable Circuits Workshop: 3h/week (Prof. MOHAMED FETHI CHATENI)
+
+FPGA Circuits: 1.5h/week (Prof. AMIRA CHAOUCH)
+
+Quality and Maintenance: 1.5h/week (Prof. WASSIM SFEIR)
+
+Process Supervision: 1.5h/week (Prof. RANIA CHAKROUN)
+
+Network Certification Preparation: 1.5h/week (Prof. WAJDI WAHAJ)
+
+🔧 Process Supervision Workshop: 1.5h/week (Prof. WASSIM SFEIR)
+
+🔧 Maintenance of Automated Systems Workshop: 3h/week (Prof. FOUED MABROUK)
+
+Axis Control: 1.5h/week (Prof. FOUED MABROUK)
+
+🧑‍💻 Group AII3.2
+Industrial Regulation: 1.5h/week (Prof. Ahmed BEN AYED)
+
+Robotic Systems: 1.5h/week (Prof. ZAHRA JLASSI)
+
+Quality and Maintenance: 1.5h/week (Prof. RAJA KRIFA)
+
+Process Supervision: 1.5h/week (Prof. FATEN GHOUL)
+
+FPGA Circuits: 1.5h/week (Prof. ASMA CHAOUCH)
+
+Renewable Energy: 1.5h/week (Prof. HICHEM KASSRAOUI)
+
+Network Certification Prep (English): 1.5h/week (Prof. WAJDI WAHAJ)
+
+Business Creation: 1.5h/week (Prof. AMAL GAFSI)
+
+Axis Control: 1.5h/week (Prof. FOUED MABROUK)
+
+Real-Time Systems: 1.5h/week (Prof. JAMEL TURKI)
+
+DSP Circuits: 1.5h/week (Prof. ASMA CHAOUCH)
+
+🔧 Robotic Systems Workshop: 3h/week (Prof. ZAHRA JLASSI)
+
+🔧 Programmable Circuits Workshop: 3h/week (Prof. MOHAMED FEHMI CHATENI)
+
+🔧 Real-Time Systems Workshop: 3h/week (Prof. JAMEL TURKI)
+
+🔧 Maintenance of Automated Systems Workshop: 3h/week (Prof. FOUED MABROUK)
+
+🎓 Specialization: CF (Comptabilité et Finance)
+
+🧑‍💼 Group CD1.1
+Communication Skills Development: 1.5h/week (Prof. Salahddine BERRAD)
+
+Human Rights Law: 3h/week (Prof. Samir HATTAB)
+
+Quality Tools and Methods: 6h/week (Prof. Mohamed BENHIDA)
+
+Financial Accounting 1: 4.5h/week (Prof. Hanen HAMMA)
+
+Organizational Management: 4.5h/week (Prof. Hanen HAMMA)
+
+General Economics 1: 4.5h/week (Prof. Hanen HAMMA)
+
+🔧 Organizational Management Workshop: 4.5h/week (Prof. Hanen HAMMA)
+
+Descriptive Statistics: 4.5h/week (Prof. Manel LABYAD)
+
+Applied Mathematics: 4.5h/week (Prof. Hanen BABA)
+
+🧑‍💼 Group CD1.2
+Human Rights Law: 3h/week (Prof. Samia MATRI)
+
+Communication Skills Development: 3h/week (Prof. Samir SFER)
+
+Financial Accounting 1: 3h/week (Prof. Amel GS)
+
+Organizational Management: 6h/week (Prof. Mourlin)
+
+Quality Tools and Methods: 3h/week (Prof. Samir SFER)
+
+Descriptive Statistics: 6h/week (Prof. HANÈE DABBA)
+
+Introduction to Law: 1.5h/week (Prof. Thabet S.)
+
+🔧 Organizational Management Workshop: 3h/week (Prof. Mourlin)
+
+Applied Mathematics: 6h/week (Prof. HANÈE DABBA)
+
+Financial Management: 3h/week (Prof. Mourlin)
+
+🎓 Specialization: CF (Comptabilité et Finance)
+
+💼 Group CF1.1
+Financial Accounting 1: 4.5h/week (Prof. Raffa BATOUCH)
+
+Organizational Management: 3h/week (Prof. Hatem KRAIEM)
+
+Financial Mathematics: 3h/week (Prof. Atlas ARFA)
+
+Descriptive Statistics: 6h/week (Prof. Hatem KRAIEM)
+
+Communication Skills Development: 3h/week (Prof. Raffa BATOUCH)
+
+Commercial Law: 3h/week (Prof. Firas KSOURI)
+
+Human Rights Law: 1.5h/week (Prof. Firas KSOURI)
+
+General Economics 1: 3h/week (Prof. NIZARHA GHALI)
+
+Applied Mathematics: 3h/week (Prof. Atlas ARFA)
+
+💼 Group CF1.2
+Financial Accounting 1: 6h/week (Prof. Rania BAYDOUH)
+
+Organizational Management: 1.5h/week (Prof. BEN JAZA)
+
+Commercial Law: 6h/week (Prof. Mehdi SAADLOU)
+
+Human Rights Law: 3h/week (Prof. NIZAR DIMASSI)
+
+General Economics 1: 6h/week (Prof. Rania BAYDOUH)
+
+Descriptive Statistics: 3h/week (Prof. Akila AFAFA)
+
+Applied Mathematics: 6h/week (Prof. JIHENE BELG TLAF)
+
+
+
+Department : Mechanics
+⚙️ Specialization: CFM (Conception et Fabrication Mécanique)
+⚙️ Group CFM2.2
+Introduction to IoT: 2h/week (Prof. Ben BOUKAR)
+
+Regulation and Servomechanisms: 3h/week (Prof. M. ZAHI)
+
+Production via CNC: 2h/week (Prof. Ben TACHIOU)
+
+Fluid Mechanics: 4h/week (Prof. Mohamed HADJOU)
+
+Technical English: 2h/week (Prof. FARIS MIRA)
+
+Industrial Automation: 3h/week (Prof. ZAHI M.A)
+
+Communication Systems: 2h/week (Prof. M. NEGZOUA)
+
+Communication Techniques: 2h/week (Prof. ZAHI M.A)
+
+Mechanical System CAD: 1h/week (Prof. ZAHI M.A)
+
+🔧 Control Workshop (Atelier Cont.): 18h/week (Prof. NADIRA Wafa)
+
+🔧 Synthesis Workshop (Atelier Synth): 3h/week (Prof. ZAHI M.A)
+
+⚙️ Group CFM2.1
+🔧 Machining Workshop (Atelier d’usinage): 3h/week (Prof. SAEB SIR)
+
+Thermodynamics: 2h/week (Prof. NADHI WAFA)
+
+Fluid Mechanics: 2h/week (Prof. ZAMMEL Hatem)
+
+Production via CNC: 2h/week (Prof. TRIKI FAKHRI)
+
+Labor Law: 1.5h/week (Prof. MEHREZ MONIA)
+
+Technical English: 1.5h/week (Prof. BOUROUIS)
+
+Automated System Implementation: 1.5h/week (Prof. ZAMMEL Hatem)
+
+Introduction to IoT: 1.5h/week (Prof. ZAMMEL Hatem)
+
+Industrial Automation: 1.5h/week (Prof. ZAMMEL Hatem)
+
+Communication Techniques: 1.5h/week (Prof. BOUROUIS)
+
+🔧 Intelligent Systems Workshop: 3h/week (Prof. SADOKI)
+
+Surveillance Systems & Automatic Equipment: 1.5h/week (Prof. MAHREZ ZAMMEL)
+
+Mechanical System CAD: 1.5h/week (Prof. ZAMMEL Hatem)
+
+# second part 
+
+⚙️ Group CFM2.2
+Introduction to Computing: 2h/week (Prof. Yassine BEN BOUARAR)
+
+Regulation and Control Systems: 4h/week (Prof. Mohamed ZAMEL)
+
+Fluid Mechanics: 2h/week (Prof. Mohamed HADJER)
+
+Technical English 1: 2h/week (Prof. FATIMA BEN FARAH)
+
+Communication Techniques: 2h/week (Prof. Mohamed NEZGAOUI)
+
+Labor Law: 2h/week (Prof. HICHAM ZAMEL)
+
+Mechanical Systems CAD + Synthesis Workshop: 2h/week (Prof. Mohamed NEZGAOUI)
+
+🔧 Control Workshop (Atelier Con1): 18h/week (Prof. HICHAM ZAMEL)
+
+⚙️ Group CFM2.3
+🔧 Maritime Management Control Workshop: 3h/week (Prof. HANTCHEU)
+
+🔧 Manufacturing Learning: 1.5h/week (Prof. ZAMO)
+
+🔧 Mechanical Workshop 3: 6h/week (Prof. KAMDEM)
+
+Fluid Mechanics: 3h/week (Prof. MOHAMADOU)
+
+Mechanical Systems CAD: 3h/week (Prof. ZAMO)
+
+🔧 Intelligent Systems Workshop: 12h/week (Prof. VAC)
+
+Labor Law: 1.5h/week (Prof. MICHEL CHANEB)
+
+Thermodynamics: 3h/week (Prof. ZAMO)
+
+🔧 CAD Production: 3h/week (Prof. BON BOUKAR)
+
+Communication Systems: 4.5h/week (Prof. ZAMO)
+
+Technical English 1: 1.5h/week (Prof. MBOGNI)
+
+⚙️ Group CFM3.1
+🔧 Machining Setup: 2h/week (Prof. MELLO ZID)
+
+Mechanical Systems 2: 2h/week (Prof. MELLO ZID)
+
+🔧 CNC Production 2: 4.5h/week (Prof. FATHI TRAIKIA)
+
+Production Organization and Management: 4h/week (Prof. MIMOUNE SOUSSI)
+
+🔧 Manufacturing Workshop (Geoff): 4h/week (Prof. MELLO ZID)
+
+FAO (Computer-Aided Manufacturing): 1h/week (Prof. ABDALAH)
+
+🔧 Mini Design Project: 10h/week (Prof. MIMOUNE SOUSSI)
+
+Technical Analysis 2: 3h/week (Prof. FATHI TRAIKIA)
+
+Metal Structures: 2h/week (Prof. MIMOUNE SOUSSI)
+
+Communication Techniques: 2h/week (Prof. MARIE BEN DELLA)
+
+Entrepreneurial Culture: 1h/week (Prof. FADWA HAMOUDIA)
+
+⚙️ Group CFM3.2
+Mechanical Systems 2: 2h/week (Prof. CHIKHI Nadir)
+
+🔧 Practical Workshop (Project): 13.5h/week (Prof. MEBARKI Abdelkrim)
+
+🔧 Mini Design Project: 4.5h/week (Prof. MEBARKI Abdelkrim)
+
+Production Management Organization: 6h/week (Prof. MEBARKI Abdelkrim)
+
+Communication Techniques: 3h/week (Prof. MAMERI BEN DJELLA)
+
+CNC Production 2: 4.5h/week (Prof. KACEM TAHAROUN)
+
+FAD (Fabrication Assistée par Ordinateur): 1.5h/week (Prof. Anis BAKLI)
+
+Design Methodology: 1.5h/week (Prof. MAMERI SOUISSI)
+
+Metal Structures: 1.5h/week (Prof. BEN AHMED)
+
+Department: Computer Science
+
+💻 Specialization: DSI (Développement des Systèmes d’Information)
+
+🧑‍💻 Group DSI2.1
+Databases: 1.5h/week (Prof. Nesrine SAIDI)
+
+IT Law: 1.5h/week (Prof. Mejda BOUASKER)
+
+Embedded System Radio: 1.5h/week (Prof. CHAHED BEN HAMED)
+
+🔧 Web Development Workshop: 3h/week (Prof. HELMI BEN AHMED)
+
+🔧 Java Programming Workshop: 4h/week (Prof. HELMI BEN AHMED)
+
+Object-Oriented Modeling (UML): 3h/week (Prof. Mouna BOUASKER CHAHED)
+
+🔧 Python Workshop: 3h/week (Prof. HELA BOUJEMAAOUI)
+
+High-Tech English: 3h/week (Prof. SIRINE FODHA)
+
+Business Communication: 1.5h/week (Prof. FIRAS HAKKOLA)
+
+🧑‍💻 Group DSI2.2
+IT Law & Intellectual Property: 1.5h/week (Prof. RACHID BEN SLAMA)
+
+🔧 Server-Side Web Development Workshop: 3h/week (Prof. RANIA BOUZIDI)
+
+Object-Oriented Programming: 3h/week (Prof. LOUBNA BEN RHOUMA)
+
+🔧 Database Workshop: 4.5h/week (Prof. AMINA BOUSSAID CHLA)
+
+Object Modeling (UML): 4.5h/week (Prof. LOUBNA BEN RHOUMA)
+
+🔧 Python Workshop: 3h/week (Prof. NADER KARRAY)
+
+High-Tech English: 1.5h/week (Prof. SIRINE FODHA)
+
+🔧 Programming N. Workshop: 4.5h/week (Prof. ALYA KHIATI)
+
+🔧 Client-Side Framework Workshop: 3h/week (Prof. ALYA KHIATI)
+
+💻 Specialization: DSI (Information Systems Development)
+Department: Computer Science
+
+🧑‍💻 Group DSI3.1
+Object-Oriented Design and Modeling Methodology: 4.5h/week (Prof. Rachid BEN SLAMA)
+
+🔧 Database Workshop: 10.5h/week (Prof. Rachid BEN SLAMA)
+
+Mobile Development: 4h/week (Prof. Mohamed HERMOUUD)
+
+🔧 Framework Workshop: 9h/week (Prof. Mohamed HERMOUUD)
+
+🔧 Information Research & Marketing Workshop: 4h/week (Prof. Rachid BEN SLAMA)
+
+🔧 SOA Workshop: 3h/week (Prof. Mohamed HERMOUUD)
+
+TOEIC Preparation: 2h/week (Prof. Meriem SENE)
+
+🧑‍💻 Group DSI3.2
+🔧 Software Testing & Validation Workshop: 3h/week (Prof. Hafedh BOUCHRIHA)
+
+🔧 DevOps Chains Workshop: 3h/week (Prof. Hafedh BOUCHRIHA)
+
+TOEIC Preparation: 2h/week (Prof. Meriem SINEE)
+
+Design Methodology: 2h/week (Prof. Leon BEN NOUMA)
+
+Big Data Management: 2h/week (Prof. Hafedh BOUCHRIHA)
+
+Mobile Development: 2h/week (Prof. Hafedh BOUCHRIHA)
+
+Web Frameworks: 2h/week (Prof. Hafedh BOUCHRIHA)
+
+🔧 SOA Workshop: 2h/week (Prof. Hafedh BOUCHRIHA)
+
+Database Architecture: 2h/week (Prof. Hafedh BOUCHRIHA)
+
+⚡ Specialization: E (Electrical Engineering)
+Department: Electrical Engineering
+
+⚡ Group EI2.1
+Law: 2h/week (Prof. Said S.R)
+
+Actuator and Sensor Selection & Sizing: 2h/week (Prof. Benziane A.)
+
+🔧 Embedded Systems Electrical Workshop: 6h/week (Prof. Mohamed El Amine C.)
+
+Connected Circuits 1: 2h/week (Prof. Khelifa M.)
+
+Analog Electronics: 2h/week (Prof. Mohamed El Amine C.)
+
+Technical English: 2h/week (Prof. Rawhia W.A)
+
+Electrotechnics: 4h/week (Prof. Youssef B.)
+
+Linear Control Systems with Digital Control: 4h/week (Prof. Khelifa M.)
+
+🔧 Embedded Systems Automation Workshop: 6h/week (Prof. Mohamed El Amine C.)
+
+Power Electronics: 4h/week (Prof. Khelifa M.)
+
+Industrial Instrumentation: 4h/week (Prof. Ammour T.)
+
+TOEIC Certification Prep: 4h/week (Prof. Rawhia W.A)
+
+Mathematics: 4h/week (Prof. Zahzouh M.S)
+
+# third part 
+
+Department: Genie Electrical
+⚡Group EI3.1
+Speed Drives: 3h/week (Prof. Hassen MOUSSA)
+
+Industrial Installation Design: 4.5h/week (Prof. Faten SEDNA)
+
+Maintenance & Reliability: 1.5h/week (Prof. Hassen MOUSSA)
+
+🔧 Supervision & Remote Management Workshop: 1.5h/week (Prof. Ahmed BEN ABDALLAH)
+
+🔧 Home Automation Installation Design Workshop: 7.5h/week (Prof. Mohamed Ali ZEDINI)
+
+🔧 Energy Quality Workshop: 3h/week (Prof. Hassen MOUSSA)
+
+🔧 Motor Control Technology Workshop: 4.5h/week (Instructor: ELECTRICITE)
+
+KNX Certification Prep: 4.5h/week (Prof. Ahmed BEN ABDALLAH)
+
+Automatic Systems Control: 3h/week (Prof. Marik BENKOUR)
+
+⚡ Group GE1.2
+🔧 Industrial Installation Design Workshop: 10.5h/week (Prof. Wassim BEN MANSOUR)
+
+Industrial Safety Certification Prep: 2h/week (Prof. Hassen MOUSSA)
+
+Speed Drives: 2h/week (Prof. Hassen MOUSSA)
+
+🔧 Energy Distribution Workshop: 4h/week (Prof. Mahdi MASMOUDI)
+
+🔧 Energy Quality Workshop: 2h/week (Prof. Hassen MOUSSA)
+
+Renewable Energies: 2h/week (Prof. Wassim BEN MANSOUR)
+
+Smart Grid Technologies: 2h/week (Prof. Hassen MOUSSA)
+
+🔧 Smart Grid Technologies Workshop: 6h/week (Prof. Raya R. & Prof. Wassim BEN MANSOUR)
+
+🔧 Supervision Workshop: 4h/week (Prof. Wassim BEN MANSOUR)
+
+🔌 Specialization: GE (Electrical Engineering Foundations)
+Department: Electrical Engineering
+
+🔌 Group GE1.1
+🔧 Electrical Circuits Workshop: 1.5h/week (Prof. Salim ABDALLAH)
+
+Domestic Installations: 1.5h/week (Prof. Omar ZARA)
+
+Mathematics 1: 4.5h/week (Prof. Bilel SLIM)
+
+Logic Systems 1: 1.5h/week (Prof. Ahmed BEN AYED)
+
+English 1: 1.5h/week (Prof. Sonia NOURA)
+
+🔧 Physics Workshop: 1.5h/week (Prof. Salim ABDALLAH)
+
+Electrical Circuits: 4.5h/week (Prof. Anna KOURI)
+
+🔧 Logic Systems Workshop: 3h/week (Prof. Ahmed BEN AYED)
+
+French: 3h/week (Prof. Wided CHERIF)
+
+Physics 1: 3h/week (Prof. Salim ABDALLAH)
+
+🔧 Domestic Installations Workshop: 1.5h/week (Prof. Omar ZARA)
+
+🔧 Electrical Equipment Workshop: 1.5h/week (Prof. Manel BAKOU)
+
+Electrical Equipment: 1.5h/week (Prof. Manel BAKOU)
+
+Structured Programming: 1.5h/week (Prof. Manel BAKOU)
+
+🔌 Group GE1.3
+Domestic Installations: 3h/week (Prof. ZAZA)
+
+🔧 Programming Workshop: 6h/week (Prof. BOUANANI)
+
+Mathematics 1: 3h/week (Prof. ZAZA)
+
+Physics 1: 1.5h/week (Prof. ZAZA)
+
+English 1: 1.5h/week (Prof. ZAZA)
+
+🔧 Logic Systems Workshop: 3h/week (Prof. ZAZA)
+
+Logic Systems 1: 3h/week (Prof. ZAZA)
+
+🔧 Electrical Workshop: 6h/week (Prof. ZAZA)
+
+Measurements & Metrology: 1.5h/week (Prof. ZAZA)
+
+Electrical Equipment: 1.5h/week (Prof. ZAZA)
+
+Electrical Circuits: 1.5h/week (Prof. ZAZA)
+
+🔧 Electrical Equipment Workshop: 1.5h/week (Prof. ZAZA)
+
+🔧 Electrotechnical CAD Workshop: 1.5h/week (Prof. ZAZA)
+
+Structured Programming 1: 1.5h/week (Prof. BACUI)
+
+🔌 Group GE1.4
+Electrotechnical CAD: 3h/week (Prof. FATHI OUALID)
+
+Domestic Installations: 3h/week (Prof. AMRI SOUFIANE)
+
+Mathematics 1: 3h/week (Prof. AMRI AGOUR)
+
+English 1: 1.5h/week (Prof. RANIA SOUFIANE)
+
+Structured Programming: 1.5h/week (Prof. T. KHI ZAKIA)
+
+Electricity: 1.5h/week (Prof. ERST. DOREEN)
+
+Logic Systems 1: 3h/week (Prof. AMRI SOUFIANE)
+
+Electrical Circuits: 3h/week (Prof. AMRI SOUFIANE)
+
+Measurements & Methods: 1.5h/week (Prof. AMRI SOUFIANE)
+
+🔧 Logic Systems Workshop: 3h/week (Prof. AMRI SOUFIANE)
+
+🔧 Electrical Circuits Workshop: 3h/week (Prof. AMRI SOUFIANE)
+
+🔧 Domestic Installations Workshop: 3h/week (Prof. AMRI SOUFIANE)
+
+Physics 1: 3h/week (Prof. SALHI ABDELJAZZ)
+
+🔧 Electrotechnical CAD Workshop: 3h/week (Prof. FATHI OUALID)
+
+French: 3h/week (Prof. M. HASSEN)
+
+🔌 Group GE1.5
+French: 1.5h/week (Prof. Wafa HASSEN)
+
+Electrical Circuits: 3h/week (Prof. Amira BANNOUR)
+
+Logic Systems 1: 3h/week (Prof. Mohamed BOUZIDI)
+
+🔧 Electrical Circuits Workshop: 4.5h/week (Prof. Amira BANNOUR)
+
+English 1: 3h/week (Prof. Sabrine FRIJIA)
+
+🔧 Logic Systems Workshop: 7.5h/week (Prof. Mohamed BOUZIDI)
+
+Electrotechnical CAD: 3h/week (Prof. Amira BANNOUR)
+
+Measurements & Metrology: 3h/week (Prof. Emna GALLOUL)
+
+Structured Programming: 1.5h/week (Prof. Mohamed M’BAOU)
+
+Physics 1: 1.5h/week (Prof. Mohamed M’BAOU)
+
+Department Mechanical
+🧑‍🏫 GM1.1
+Mechanical Design 1 — 3h/week (Mohamed Mortaji Mahjoub)
+
+Statics and Kinematics of Solids — 3h/week (Abdelrham Baccar)
+
+Manufacturing Processes and Methods 1 — 4.5h/week (Mohamed Mortaji Mahjoub)
+
+Materials Science — 3h/week (Wafa Sellami)
+
+RDMI (Industrial Design and Methods) — 3h/week (Rania Sbaa)
+
+Algebra — 3h/week (Jihene Belhaj Taief)
+
+English 1 — 1.5h/week (Besma Azdia)
+
+French and Communication — 1.5h/week (Besma Azdia)
+
+🔧 Mechanical Design Workshop — 3h/week (Mohamed Mortaji Mahjoub)
+
+🧑‍🏫 GM1.2
+Production Processes and Methods 1 — 4.5h/week (Mohamed Mortar Mahjoub)
+
+🔧 CAD Mechanical Design Workshop — 10.5h/week (Wafa Sellami)
+
+French and Communication — 3h/week (Besma Azdia)
+
+Mechanical Design 1 — 4.5h/week (Mohamed Mortar Mahjoub)
+
+Statics and Kinematics of Solids — 4.5h/week (Mohamed Mortar Mahjoub)
+
+Calculus 1 — 4.5h/week (Aicha Zazdani)
+
+RDMI — 4.5h/week (Rania Sbaa)
+
+🧑‍🏫 GM1.3
+Mechanical Design I — 3h/week (Mohamed Mortaji Majid)
+
+Manufacturing Processes and Methods I — 3h/week (FEM Bouzid)
+
+Materials Science — 4.5h/week (Mohamed Chouaibi)
+
+Calculus I — 4.5h/week (Aicha Ezzouma)
+
+Strength of Materials (RDM I) — 4.5h/week (Mohamed Chouaibi)
+
+Structural Statics — 6h/week (Mohamed Chouaibi)
+
+French and Communication — 1.5h/week
+
+Algebra — 3h/week (Jihene Mahdi Taief)
+
+🧑‍🏫 GM1.4
+Calculus 1 — 3h/week (Aicha Zerdani)
+
+Mechanical Design 1 — 3h/week (Mohamed Mortaj Mahjoub)
+
+Algebra — 1.5h/week (Jihene Belhaj Taief)
+
+🔧 Materials Science Workshop — 3h/week (Houda Chouchane)
+
+Manufacturing Processes and Methods — 4.5h/week (Mohamed Mortaj Mahjoub)
+
+Materials Science — 3h/week (Houda Chouchane)
+
+🔧 Mechanical Design Workshop — 6h/week (Mohamed Mortaj Mahjoub)
+
+Statics and Kinematics — 3h/week (Mohamed Mortaj Mahjoub)
+
+French and Communication — 3h/week (Besma Kadri)
+
+English 1 — 3h/week (Besma Kadri)
+
+RDMI — 4.5h/week (Mohamed Mortaj Mahjoub)
+
+# fourth part
+
+🧑‍🏫 Group GM1.5
+Materials Science — 3h/week (Abderrahmane Baccar)
+
+Calculus 1 — 3h/week (Fatma Ben Taarit, Ezzaouia)
+
+ROMI (Industrial Design & Methods) — 3h/week (Abderrahmane Baccar)
+
+Mechanical Design — 1.5h/week (Mounir Souissi)
+
+Algebra — 1.5h/week (Jihene Bel Haj Tayef)
+
+French & Communication — 1.5h/week (Besma Kacem)
+
+Production Methods & Processes 1 — 6h/week (Mohamed Hedi Bouzid)
+
+🔧 Mechanical Design Workshop — 12h/week (Abderrahmane Baccar)
+
+🌐 Specialization: Internet of Things (IoT)
+🧠 Group IoT1.1
+Introduction to Smart Objects — 3h/week (Hela Boujmaouia)
+
+Virtualization — 3h/week (Tarek Jalleld)
+
+Cloud Workshop — 4.5h/week (Nazha Ghammassi)
+
+Project Management Introduction — 1.5h/week (Nazha Ghammassi)
+
+Artificial Intelligence — 3h/week (Kamal Debbi)
+
+DevOps Workshop — 4.5h/week (Aziz M’rabet)
+
+Agile Project Management — 3h/week (Nesrine Hammami)
+
+Communication Protocols & Standards — 4.5h/week (Wahid Bammour, Mourad Arbia)
+
+Big Data — 3h/week (Mohamed Ali Jarraya)
+
+EBOOK-SCAN Communication Certification — 1.5h/week (Aziz M’rabet)
+
+TOEIC Prep — 1.5h/week (Nazha Ghammassi)
+
+🔐 Group IoT2.1
+Team Management — 3h/week (Afifa Khalifa)
+
+🔧 Constrained Environment Dev (C/C++) Workshop — 9h/week (Afifa Khalifa)
+
+🔧 IoT Security Workshop — 18h/week (Be Amed Ben Amor)
+
+🔧 Data Analysis Workshop — 6h/week (Be Amed Ben Amor)
+
+Digitalization of India — 3h/week (Mr Tilloch)
+
+🔧 Real-Time OS Workshop — 6h/week (Mr Tilloch)
+
+Manufacturing Execution System — 3h/week (Mr Tilloch)
+
+
+💻 Specialization: MDW (Multimedia & Web Development)
+🎨 Group MDW2.1
+🔧 Image Processing Workshop — 4.5h/week (Mohamed Amine Chakhar)
+
+Object-Oriented Programming — 4.5h/week (Mohamed Amine Chakhar)
+
+Databases — 3h/week (Mohamed Amine Chakhar)
+
+🔧 Web Development Workshop — 6h/week (Mohamed Amine Chakhar)
+
+🔧 Database Workshop — 3h/week (Mohamed Amine Chakhar)
+
+System & Network Services Administration — 1.5h/week (Yosri Ben Boubaker)
+
+High-Tech English — 1.5h/week (Rafe Fodia)
+
+Digital Marketing — 1.5h/week (Madiha Masmoudi)
+
+🔧 Digital Marketing Workshop — 1.5h/week (Madiha Masmoudi)
+
+Business Communication — 1.5h/week (Ben Slama)
+
+Department (Electrical)
+Specialization MI
+🧑‍🏫 Group MI3.1
+Data Acquisition & Processing — 2h/week (M. Zouma)
+
+Technical English 3 — 2h/week (Fatna Ben Farah)
+
+Operating Systems — 2h/week (M. Zouma)
+
+Design Methodology — 2h/week (M. Zouma)
+
+Electrical Machine Control — 2h/week (M. Zouma)
+
+Electronic System Repair Techniques — 4h/week (M. Zouma)
+
+Maintenance Methods — 4.5h/week (M. Kamdem)
+
+Entrepreneurship Culture — 2h/week (Mme Fotsa Mandjoua)
+
+🔧 GMA Workshop (Gestion Maintenance Assistée) — 18h/week (M. Zouma)
+
+🔧 Mini Maintenance Project — 2h/week (M. Zouma)
+
+
+📊 Specialization: MN
+🧑‍🏫 Group MN1.1
+Descriptive Statistics — 4.5h/week (Hatem Henchiri)
+
+Information Systems Development — 1.5h/week (Hatem Henchiri)
+
+General Economics 1 — 3h/week (Amine Day)
+
+General Economics 2 — 1.5h/week (Amine Day)
+
+Organizational Management — 1.5h/week (Amine Day)
+
+Financial Accounting 1 — 3h/week (Amine Day)
+
+Financial Accounting 2 — 1.5h/week (Amine Day)
+
+Applied Mathematics — 4.5h/week (Mourak Mattoug)
+
+Human Rights Law — 1.5h/week (Hatem Henchiri)
+
+Introduction to Law — 1.5h/week (Hatem Henchiri)
+
+ Specialization : mi mecanique Industrielle
+🧑‍🏫 Group MI2.1 (Variant 1)
+Mechanical Systems CAD — 1.5h/week (Mahmoud Hadj Mabrouk)
+
+Advanced Thermodynamics — 2h/week (Nadira Wafa)
+
+Automatic Systems Analysis — 1.5h/week (Mahmoud Souissi)
+
+Regulation & Control — 3h/week (Kamel Turki)
+
+Production Systems — 1.5h/week (Fatma Khlifi)
+
+Communication Systems — 1.5h/week (Mahmoud Mezguoui)
+
+Technical English — 1.5h/week (Fatma Ben Farah)
+
+🔧 Realization Workshop — 22.5h/week (Mahmoud Hadj Mabrouk)
+
+🧑‍🏫 Group MI2.1 (Variant 2)
+Mechanical Systems CAD — 3h/week (Hadj Mohamed Lyes)
+
+Advanced Thermodynamics — 2h/week (Nadira Wafa)
+
+Mechanical Systems Analysis — 2h/week (Mahmoud Souss)
+
+Regulation & Control — 3h/week (Khelifa Turk)
+
+Production Preparation — 2h/week (Saab Sir)
+
+Communication Systems — 2h/week (Mahmoud Mezguar)
+
+Technical English — 3h/week (Fatmi Ben Rabah)
+
+🔧 Mechanical Realization Workshop — 22.5h/week (Hadj Mohamed Lyes)
+
+🔧 Professional Workshop — 2h/week (Soumay Zabia)
+
+🔧 Intelligent Systems Workshop — 1.5h/week (VACS VACS)
+
+
+🧑‍🏫 Group MI3.1 (Variant 2)
+Data Acquisition & Processing — 2h/week (Chikhi Mimoun)
+
+Technical English — 2h/week (Bouziane Imad)
+
+Climate Systems — 3h/week (Meddah Hichem)
+
+Design Methodology — 1.5h/week (Chikhi Mimoun)
+
+Maintenance Driving — 1.5h/week (Bouziane Imad)
+
+Maintenance Methods — 3h/week (Mahmoudi Imene)
+
+Entrepreneurship Culture — 1.5h/week (Fadna Mahouloula)
+
+Communication Techniques — 1.5h/week (Fadna Mahouloula)
+
+🔧 GMA Workshop (Computer-Aided Maintenance Management) — 3h/week (Bouziane Imad)
+
+🔧 Mini Maintenance Project — 10.5h/week (Mahmoudi Imene)
+
+Specialization :MN
+🧑‍🏫 Group MN1.1
+Descriptive Statistics — 3h/week (Haman Hien)
+
+Skill Development — 2h/week (Haman Hien)
+
+General Economics 1 — 4.5h/week (Haman Hien)
+
+Financial Accounting 1 — 4.5h/week (Amie Day)
+
+General Economics 2 — 2h/week (Haman Hien)
+
+Human Rights Law — 2h/week (Maurel Matoug)
+
+Introduction to Law — 2h/week (Maurel Matoug)
+
+Applied Mathematics — 4h/week (Maurel Matoug)
+
+🔧 Organizational Management Workshop — 2h/week (Maurel Matoug)
+
+🧑‍🏫 Group MN1.2
+Descriptive Statistics — 4h/week (Hatem Hemmous)
+
+Financial Accounting 1 — 4.5h/week (Amine Day)
+
+Organizational Management — 2h/week (Naziha Dhamssi)
+
+🔧 Organizational Management Workshop — 2h/week (Naziha Dhamssi)
+
+Applied Mathematics — 4h/week (Mourad Mattoug)
+
+Human Rights Law — 1.5h/week (Naziha Dhamssi)
+
+Communication Skills Development — 2h/week (Naziha Dhamssi)
+
+General Economics 1 — 4.5h/week (Naziha Dhamssi)
+
+Introduction to Law — 2h/week (Naziha Dhamssi)
+
+🏭 Specialization:MNI
+🧑‍🏫 Group MNI2.1
+Metrology & Instrumentation — 1.5h/week (Rama SISA Process)
+
+Entrepreneurship Culture — 3h/week (Lama Lava)
+
+Production Management — 1.5h/week (Hanen Hamza)
+
+Industrial Marketing — 3h/week (Amira Ben / Lama Lava)
+
+Stock & Supply Management — 4.5h/week (Sameer GF)
+
+Management Methods & Techniques — 6h/week (GF)
+
+Analytical Accounting & Management — 3h/week (Amira Ben Abdallah)
+
+Business English — 1.5h/week (Amira Ben Abdallah)
+
+Operational Research — 1.5h/week (Kssaba)
+
+
+🧑‍🏫 Group MNI3.1
+Business Strategy — 6h/week (Zaki Omassi)
+
+Quality Control (Statistical) — 3h/week (Hind Tarchoun)
+
+Business Creation — 2h/week (Nour Amara)
+
+Audit & Certification — 3h/week (Samir Edd)
+
+Career Development & Skills — 3h/week (Nour Amara)
+
+Project Management — 3h/week (Nour Amara)
+
+Management Control — 6h/week (Room G4.3)
+
+🔧 GMAO Workshop (Computer-Aided Maintenance Management) — 3h/week (Fethi Tarchoun)
+
+🔧 Lean Manufacturing Workshop — 9h/week (Fethi Tarchoun)
+
+🔧 Dashboard & Indicators Workshop — 6h/week (Mariem Belghith)
+
+PPI
+🧑‍🏫 Group PPI1.1
+Problem-Solving Methods — 4h/week (Nizar Meddeb)
+
+Information Systems: Levels & Roles — 3h/week (Nouha Hmassi)
+
+Team Management — 4h/week (Najla Mansour)
+
+Reporting — 2h/week (Guest Lecturer)
+
+Communication Techniques — 1h/week (Guest Lecturer)
+
+Maintenance Methods — 2h/week (Moueel Elgaied)
+
+Professional English — 3h/week (Guest Lecturer)
+
+Automation — 4h/week (Guest Lecturer)
+
+🔧 CFAO Workshop (Computer-Aided Design & Manufacturing) — 6h/week (Mohamed Faten Boudz, Fatma Ben Rhaiem, Rafik Tarchoun)
+
+🧑‍🏫 Group PPI2.1
+Operational Research — 2h/week (Mme Aziza)
+
+Information Systems Management (SISE) — 2h/week (Mme Ghise)
+
+Risk Prevention — 2h/week (Marouck Gallety)
+
+Information Systems Design & Implementation — 2h/week (El Mansouri)
+
+Business Plan — 2h/week (Ali Soussi)
+
+Text Analysis — 2h/week (Fatima Ben Farah)
+
+Dashboards — 2h/week (El Mansouri)
+
+Audit & Internal Control — 2h/week (El Mansouri)
+
+🔧 QQA Workshop (Quality Assurance) — 2h/week (Mme Aziza)
+
+Corporate Law — 2h/week (El Mansouri)
+
+Industrial & Social Safety — 2h/week (Walid Baccar)
+
+Export Planning — 2h/week (Mme Aziza)
+
+CSPW-OT / CSWAS — 4h/week (Rachid Ouchn, Moncher Ben Amor)
+
+Statistics & Data Analysis — 2h/week (Noura Belhaj)
+
+RSI
+🧑‍🏫 Group RSI2.1
+Object-Oriented Programming — 3h/week (Hela Boukamoura)
+
+Business Law — 1.5h/week (Boussa Chahrazed)
+
+High-Tech English — 3h/week (Sine H. Fadia)
+
+🔧 Database Workshop — 13.5h/week (Rachid Ben Slimane)
+
+🔧 Android Development Workshop — 13.5h/week (Rachid Ben Slimane)
+
+🔧 Web Programming Workshop — 13.5h/week (Fadwa Hamdaoui)
+
+🔧 Local Networks & Architecture Workshop — 13.5h/week (Sine H. Fadia)
+
+🧑‍🏫 Group RSI3.1
+🔧 Integration & Research Project Workshop — 10h/week (M. Kanoun)
+
+Research & Engineering Introduction — 4h/week (Ben Slama)
+
+System & Network Security — 4h/week (Afef Ben Ammar)
+
+Data Center Management — 4h/week (M. Kanoun)
+
+🔧 Advanced DevOps Techniques Workshop — 4h/week (M. Kanoun)
+
+WAN Technologies — 4h/week (AIS Kanoun)
+
+🔧 Database Administration Workshop — 4h/week (M. Kanoun)
+
+🔧 TOEIC Certification Prep Workshop — 6h/week (Meriem Seni)
+
+💰 Specialization: TCF
+🧑‍🏫 Group TCF2.1
+Management Accounting — 2h/week (Amira Benz)
+
+Entrepreneurship Culture — 2h/week (Akila Aifa)
+
+Banking Techniques — 2h/week (Akila Aifa)
+
+Indirect Taxation — 4h/week (Amira Benz)
+
+Short-Term Finance — 4h/week (Amel Dadour)
+
+Corporate Accounting — 8h/week (Amel Dadour)
+
+Business English — 4h/week (Kamel Abdallah)
+
+PPC (Self-awareness & Stress Management) — 2h/week (Amira Benz)
+
+🔧 Accounting Workshop (Inferior Level) — 4h/week (Amira Benz)
+
+EEP (Enterprise Educational Project) — 4h/week (Amel Dadour)
+
+🧑‍🏫 Group TCF3.1
+Advanced Accounting — 4h/week (Hela Siah)
+
+International Finance — 4h/week (Rafika Daoudh)
+
+Management Control — 2h/week (Amel Labbane)
+
+Management Accounting — 2h/week (Manel Labidi)
+
+Advanced Accounting in English — 2h/week (Hela Siah)
+
+Business Creation — 2h/week (Rafika Daoudh)
+
+EEP — 4h/week (Hela Siah)
+
+Audit & Internal Control — 4h/week (Amel Dadour)
+
+🔧 Case Study Workshop — 6h/week (Malek Bellanes)
+
+🔧 Analytical Workshop — 2h/week (Manel Jellines)
+
+Treasury Management — 2h/week (Akila Ara)
+
+Treasury Management in English — 2h/week (Akila Ara)
+
+🧑‍🏫 Group TCF3.2
+Treasury Management — 4h/week (Akila Ara)
+
+Advanced Accounting — 4h/week (Hela STH)
+
+Business Creation — 2h/week (Amel Dabour)
+
+International Finance — 4h/week (Akila Ara)
+
+Lean Finance Certification Prep — 4h/week (Amel Dabour)
+
+EEP — 4h/week (Amel Dabour / Hela STH)
+
+Management Control — 2h/week (Amel Dabour)
+
+Audit & Internal Control — 6h/week (Akila Ara)
+
+Skill Development — 2h/week (Amel Dabour)
+
+🔧 Case Analysis Workshop — 8h/week (Lilia)
+
+🔧 Deepening Workshop — 6h/week (Lilia)
+
+🧑‍🏫 Group T11.4
+Algorithm & Programming — 8h/week (Zazi + Abdallah)
+
+Web & Mobile Development — 4h/week (Zazi)
+
+Mini Project Workshop — 10h/week (Zazi)
+
+Mathematics & Applied Mathematics — 8h/week (Ben Laziz + Zazi)
+
+Logic for Computer Science — 2h/week (Zazi)
+
+Computer Architecture — 2h/week (MATH)
+
+System Workshop (SYS) — 6h/week (Zazi)
+
+Digital Communication & Collaboration (CCN) — 2h/week (Zazi)
+
+🧑‍🏫 Group T11.5
+Web & Multimedia Development — 2h/week (Zayer)
+
+Algorithm & Programming — 4h/week (Hichem)
+
+Web & Multimedia Workshop — 4h/week (Hichem)
+
+Programming Workshop — 6h/week (Hichem)
+
+Applied Mathematics — 4h/week (Boukadida)
+
+Applied Math Workshop — 10h/week (Boukadida)
+
+Computer Architecture — 2h/week (Abida)
+
+Logical Systems — 2h/week (Bannour)
+
+Logic for Computer Science — 2h/week (Abida)
+
+Digital Communication & Collaboration (CCN) — 2h/week (Sassi)
+
+English for Computing 1 — 2h/week (Ben Abdallah)
+
+Specialization tv
+
+🧑‍🏫 Group TV2.1
+Entrepreneurship Culture — 2h/week (Benziane)
+
+Consumer Behavior — 4h/week (Bendjelloul)
+
+Self-awareness & Stress Management — 2h/week (Benaissa)
+
+Enterprise Project (EEP) — 6h/week (Ben Azza)
+
+Financial Management — 2h/week (Lagouaz)
+
+Market Research — 4h/week (Lagouaz)
+
+Analytical Accounting — 2h/week (Benaissa)
+
+Digital Marketing — 2h/week (Mahmoudi)
+
+Digital Marketing Workshop — 2h/week (Mahmoudi)
+
+Stock & Supply Management — 4h/week (Benziane)
+
+Business English — 2h/week (Ben Abdallah)
+
+🧑‍🏫 Group TV3.1
+Business Creation — 2h/week (Shtai)
+
+Enterprise Project (EEP) — 6h/week (Shtai)
+
+Tourism Product Marketing — 4h/week (Laayouni)
+
+Sales Negotiation Techniques Workshop — 4h/week (Laayouni)
+
+Point-of-Sale Marketing — 4h/week (Ben Ziza)
+
+Management Control — 6h/week (Gafsi)
+
+Strategic Marketing — 4h/week (Laayouni)
+
+Project Defense Preparation — 2h/week (Laayouni)
+
+Commercial Dashboard — 4h/week (Bellanes)
