@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Card from "./Card";
+import SessionFilters from "./sessions/SessionFilters";
+import SessionTable from "./sessions/SessionTableClean";
 
 type RawGroup = {
   id: number;
@@ -50,6 +52,17 @@ export default function SessionsCRUD() {
   const [selectedSubject, setSelectedSubject] = useState<number | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
   const [selectedTeacher, setSelectedTeacher] = useState<number | null>(null);
+  // UI filters & sorting
+  const [filterScheduled, setFilterScheduled] = useState<
+    "all" | "scheduled" | "unscheduled"
+  >("all");
+  const [weekdayFilter, setWeekdayFilter] = useState<string>("");
+  const [sortBy, setSortBy] = useState<
+    "group" | "subject" | "teacher" | "weekday" | "time"
+  >("group");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+
+  // components are imported at top-level
 
   useEffect(() => {
     setLoading(true);
@@ -62,9 +75,7 @@ export default function SessionsCRUD() {
         return res.json();
       })
       .then((data) => {
-        // Log raw sessions for debugging missing data
-        // eslint-disable-next-line no-console
-        console.debug("/api/sessions ->", data.sessions);
+        // raw sessions loaded (debug log removed)
         setSessions(data.sessions || []);
         setError(null);
       })
@@ -101,27 +112,93 @@ export default function SessionsCRUD() {
     return () => clearTimeout(timeout);
   }, [teacherQuery]);
 
-  const scheduled = sessions.filter(
-    (s) => s.scheduled_weekday && s.scheduled_time
-  );
-  const unscheduled = sessions.filter(
-    (s) => !s.scheduled_weekday || !s.scheduled_time
-  );
+  // filtered/sorted lists are computed below; we don't need raw scheduled/unscheduled vars
+
+  // Apply UI filters and sorting to sessions
+  function matchesFilters(s: RawSession) {
+    if (selectedSubject && s.subjectId !== selectedSubject) return false;
+    if (selectedGroup && s.groupId !== selectedGroup) return false;
+    if (selectedTeacher && s.teacher?.id !== selectedTeacher) return false;
+    if (weekdayFilter && s.scheduled_weekday !== weekdayFilter) return false;
+    return true;
+  }
+
+  function compareSessions(a: RawSession, b: RawSession) {
+    const dir = sortDir === "asc" ? 1 : -1;
+    switch (sortBy) {
+      case "group":
+        return (
+          dir *
+          (
+            (a.group?.specialization?.name ?? "") +
+            " " +
+            (a.group?.level ?? "")
+          ).localeCompare(
+            (b.group?.specialization?.name ?? "") + " " + (b.group?.level ?? "")
+          )
+        );
+      case "subject":
+        return (
+          dir * (a.subject?.name ?? "").localeCompare(b.subject?.name ?? "")
+        );
+      case "teacher":
+        return (
+          dir *
+          (a.teacher?.user?.name ?? "").localeCompare(
+            b.teacher?.user?.name ?? ""
+          )
+        );
+      case "weekday":
+        return (
+          dir *
+          (a.scheduled_weekday ?? "").localeCompare(b.scheduled_weekday ?? "")
+        );
+      case "time":
+        return (
+          dir * (a.scheduled_time ?? "").localeCompare(b.scheduled_time ?? "")
+        );
+      default:
+        return 0;
+    }
+  }
+
+  const filteredSessions = sessions.filter((s) => {
+    if (filterScheduled === "scheduled")
+      return s.scheduled_weekday && s.scheduled_time && matchesFilters(s);
+    if (filterScheduled === "unscheduled")
+      return (!s.scheduled_weekday || !s.scheduled_time) && matchesFilters(s);
+    return matchesFilters(s);
+  });
+
+  const filteredScheduled = filteredSessions
+    .filter((s) => s.scheduled_weekday && s.scheduled_time)
+    .sort(compareSessions);
+  const filteredUnscheduled = filteredSessions
+    .filter((s) => !s.scheduled_weekday || !s.scheduled_time)
+    .sort(compareSessions);
 
   function openEditModal(session: RawSession) {
     // Prefill autocomplete/search fields so the modal shows existing values
     setSelectedSubject(session.subjectId ?? null);
-    setSubjectQuery(session.subject?.name ?? (session.subjectId ? `#${session.subjectId}` : ""));
+    setSubjectQuery(
+      session.subject?.name ??
+        (session.subjectId ? `#${session.subjectId}` : "")
+    );
     setSelectedGroup(session.groupId ?? null);
     setGroupQuery(
       session.group
-        ? `${session.group.specialization?.name ?? ""} ${session.group.level ?? ""}`.trim()
+        ? `${session.group.specialization?.name ?? ""} ${
+            session.group.level ?? ""
+          }`.trim()
         : session.groupId
         ? `#${session.groupId}`
         : ""
     );
     setSelectedTeacher(session.teacher?.id ?? null);
-    setTeacherQuery(session.teacher?.user?.name ?? (session.teacher?.id ? `T${session.teacher.id}` : ""));
+    setTeacherQuery(
+      session.teacher?.user?.name ??
+        (session.teacher?.id ? `T${session.teacher.id}` : "")
+    );
     setModal({ type: "edit", session });
   }
   function openAddModal() {
@@ -247,130 +324,64 @@ export default function SessionsCRUD() {
         <div className="text-white">Loading...</div>
       ) : (
         <>
-          <div className="mb-10">
-            <h3 className="text-xl font-semibold text-white mb-4">
-              Scheduled Sessions
-            </h3>
-            {scheduled.length === 0 ? (
-              <p className="text-gray-200">No scheduled sessions yet.</p>
-            ) : (
-              <div className="overflow-x-auto rounded-lg border border-white/10">
-                <table className="min-w-full divide-y divide-white/10">
-                  <thead className="bg-black/30">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Group
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Subject
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Teacher
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Weekday
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Time
-                      </th>
-                      <th className="px-4 py-3"></th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white/5 divide-y divide-white/10">
-                    {scheduled.map((s: RawSession) => (
-                      <tr key={s.id} className="hover:bg-white/10 transition">
-                        <td className="px-4 py-3 text-sm text-gray-200 whitespace-nowrap">
-                          {renderGroupName(s)}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-200">
-                          {s.subject?.name ?? `#${s.subjectId}`}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-200">
-                          {s.teacher?.user?.name ?? `T${s.teacher?.id ?? ""}`}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-200">
-                          {s.scheduled_weekday}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-200">
-                          {s.scheduled_time}
-                        </td>
-                        <td className="px-4 py-3 text-sm flex gap-2">
-                          <button
-                            className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-                            onClick={() => openEditModal(s)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                            onClick={() => openDelete(s.id)}
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold text-white mb-4">
-              Unscheduled Sessions
-            </h3>
-            {unscheduled.length === 0 ? (
-              <p className="text-gray-200">All sessions are scheduled.</p>
-            ) : (
-              <div className="overflow-x-auto rounded-lg border border-white/10">
-                <table className="min-w-full divide-y divide-white/10">
-                  <thead className="bg-black/30">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Group
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Subject
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Teacher
-                      </th>
-                      <th className="px-4 py-3"></th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white/5 divide-y divide-white/10">
-                    {unscheduled.map((s: RawSession) => (
-                      <tr key={s.id} className="hover:bg-white/10 transition">
-                        <td className="px-4 py-3 text-sm text-gray-200 whitespace-nowrap">
-                          {renderGroupName(s)}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-200">
-                          {s.subject?.name ?? `#${s.subjectId}`}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-200">
-                          {s.teacher?.user?.name ?? "-"}
-                        </td>
-                        <td className="px-4 py-3 text-sm flex gap-2">
-                          <button
-                            className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-                            onClick={() => openEditModal(s)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                            onClick={() => openDelete(s.id)}
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+          <SessionFilters
+            filterScheduled={filterScheduled}
+            setFilterScheduled={setFilterScheduled}
+            weekdayFilter={weekdayFilter}
+            setWeekdayFilter={setWeekdayFilter}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+            sortDir={sortDir}
+            setSortDir={setSortDir}
+            clearFilters={() => {
+              setFilterScheduled("all");
+              setWeekdayFilter("");
+              setSelectedSubject(null);
+              setSelectedGroup(null);
+              setSelectedTeacher(null);
+              setSubjectQuery("");
+              setGroupQuery("");
+              setTeacherQuery("");
+            }}
+          />
+
+          {filterScheduled !== "unscheduled" && (
+            <div className="mb-10">
+              <h3 className="text-xl font-semibold text-white mb-4">
+                Scheduled Sessions
+              </h3>
+              {filteredScheduled.length === 0 ? (
+                <p className="text-gray-200">No scheduled sessions yet.</p>
+              ) : (
+                <SessionTable
+                  sessions={filteredScheduled}
+                  onEdit={openEditModal}
+                  onDelete={openDelete}
+                  renderGroupName={renderGroupName}
+                  showSchedule
+                />
+              )}
+            </div>
+          )}
+
+          {filterScheduled !== "scheduled" && (
+            <div>
+              <h3 className="text-xl font-semibold text-white mb-4">
+                Unscheduled Sessions
+              </h3>
+              {filteredUnscheduled.length === 0 ? (
+                <p className="text-gray-200">All sessions are scheduled.</p>
+              ) : (
+                <SessionTable
+                  sessions={filteredUnscheduled}
+                  onEdit={openEditModal}
+                  onDelete={openDelete}
+                  renderGroupName={renderGroupName}
+                  showSchedule={false}
+                />
+              )}
+            </div>
+          )}
         </>
       )}
 

@@ -14,6 +14,13 @@ export default withAuth(
     // Admin routes - only accessible by ADMIN role
     if (path.startsWith("/admin")) {
       if (token?.role !== "ADMIN") {
+        // Allow a short grace period immediately after the user confirms
+        // their role. The confirm-role API sets a short-lived cookie
+        // `roleUpdated=1` which we trust for a few seconds to avoid
+        // forcing the user to sign in again while JWT/session cookies
+        // are being refreshed.
+        const roleUpdated = req.cookies.get?.("roleUpdated")?.value;
+        if (roleUpdated) return NextResponse.next();
         return NextResponse.redirect(new URL("/", req.url));
       }
     }

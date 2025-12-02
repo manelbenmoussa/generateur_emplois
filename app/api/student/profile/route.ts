@@ -5,7 +5,7 @@ import prisma from "@/dao/db";
 import * as userDao from "@/dao/userDao";
 
 // GET /api/student/profile
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
 
@@ -41,9 +41,11 @@ export async function GET(request: Request) {
         id: student.id,
         name: student.user.name,
         email: student.user.email,
-        group: student.group?.level || "No Group",
+        group: student.group?.level || null,
+        groupId: student.group?.id ?? null,
         department: student.group?.specialization?.department?.name || "N/A",
         school: student.school.name,
+        schoolId: student.schoolId,
       },
     });
   } catch (err) {
@@ -63,14 +65,24 @@ export async function PUT(request: Request) {
 
     const userId = session.user.id;
     const body = await request.json();
-    const { name, phone } = body;
+    const { name, groupId } = body;
 
     // Update user info
     await userDao.updateUser(userId, {
       name: name || undefined,
     });
 
-    // TODO: Add phone field to schema if needed
+    // Update student's group if provided
+    if (groupId !== undefined) {
+      // Find student record by userId
+      const studentRec = await prisma.student.findUnique({ where: { userId } });
+      if (studentRec) {
+        await prisma.student.update({
+          where: { id: studentRec.id },
+          data: { groupId: groupId || null },
+        });
+      }
+    }
 
     return NextResponse.json({ message: "Profile updated successfully" });
   } catch (err) {

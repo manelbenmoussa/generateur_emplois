@@ -18,10 +18,7 @@ if (process.env.PRISMA_ACCELERATE_URL) {
   };
 
   if (process.env.NODE_ENV !== "production") {
-    // eslint-disable-next-line no-console
-    console.info(
-      "Prisma configured with runtime datasource override (DATABASE_URL)"
-    );
+    // Prisma runtime datasource override detected (log removed)
   }
 }
 

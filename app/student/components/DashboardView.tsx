@@ -143,7 +143,7 @@ export default function DashboardView({
         <div className="lg:col-span-2 bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-semibold text-white">
-              Today's Schedule
+              Today&apos;s Schedule
             </h3>
             <span className="text-sm text-gray-300">
               {new Date().toLocaleDateString("en-US", {

@@ -77,10 +77,7 @@ export const authOptions: NextAuthOptions = {
               // No user exists yet for this email — allow NextAuth to create
               // the user record (do not redirect). The jwt callback will be
               // invoked with isNewUser and we set needsRoleConfirmation there.
-              console.debug(
-                "Google signIn: no existing user, allowing creation for",
-                email
-              );
+              // debug log removed
               return true;
             }
 
@@ -258,18 +255,7 @@ export const authOptions: NextAuthOptions = {
       }
 
       if (process.env.NODE_ENV !== "production") {
-        try {
-          console.debug("NextAuth session callback returning user:", {
-            id: session.user?.id,
-            email: session.user?.email,
-            name: session.user?.name,
-            image: session.user?.image,
-            needsRoleConfirmation: session.user?.needsRoleConfirmation,
-            role: session.user?.role,
-          });
-        } catch {
-          // ignore
-        }
+        // NextAuth session callback debug log removed
       }
 
       return session;
@@ -277,25 +263,20 @@ export const authOptions: NextAuthOptions = {
   },
 
   events: {
-    signIn: async ({
-      user,
-      account,
-      isNewUser,
-    }: {
+    signIn: async (args: {
       user?: unknown;
-      account: { provider?: string } | null;
+      account?: { provider?: string } | null;
       isNewUser?: boolean;
     }) => {
-      const uid = (user as unknown as { id?: string })?.id;
-      console.info("NextAuth signIn event:", {
-        provider: account?.provider,
-        userId: uid,
-        isNewUser,
-      });
+      const user = args.user;
+      // preserve typed access without creating unused vars
+      void (user as unknown as { id?: string })?.id;
+      // NextAuth signIn event log removed
     },
-    createUser: async ({ user }: { user?: unknown }) => {
-      const u = user as unknown as { id?: string; email?: string };
-      console.info("NextAuth createUser event:", { id: u.id, email: u.email });
+    createUser: async ({ user: _user }: { user?: unknown }) => {
+      // preserve typed access without creating unused vars
+      void (_user as unknown as { id?: string; email?: string });
+      // NextAuth createUser event log removed
     },
   },
 
@@ -307,7 +288,9 @@ export const authOptions: NextAuthOptions = {
       console.warn("NextAuth warn:", code);
     },
     debug(code, metadata) {
-      console.debug("NextAuth debug:", code, metadata);
+      // NextAuth debug suppressed
+      void code;
+      void metadata;
     },
   },
 

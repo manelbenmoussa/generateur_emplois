@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/dao/db";
+const p = prisma as any;
 
 // GET /api/student/payments
 export async function GET(request: Request) {
@@ -23,7 +24,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Student not found" }, { status: 404 });
     }
 
-    const payments = await prisma.payment.findMany({
+    const payments = await p.payment.findMany({
       where: {
         studentId: student.id,
       },

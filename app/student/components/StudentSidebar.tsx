@@ -12,17 +12,15 @@ export default function StudentSidebar({
   activeView,
   onViewChange,
 }: StudentSidebarProps) {
+  // Keep student navigation minimal: Timetable, Profile, Home (Home last)
   const mainMenuItems = [
-    { id: "home", icon: "🏠", label: "Home" },
-    { id: "dashboard", icon: "📊", label: "Dashboard" },
     { id: "timetable", icon: "📅", label: "Timetable" },
-    { id: "messages", icon: "🔔", label: "Notifications" },
-    { id: "data", icon: "📊", label: "Data" },
     { id: "profile", icon: "👤", label: "Profile" },
+    { id: "home", icon: "🏠", label: "Home" },
   ];
 
   return (
-    <aside className="w-64 min-h-screen bg-black/30 backdrop-blur-lg border-r border-white/10 flex flex-col">
+    <aside className="w-1/4 sticky top-0 h-screen bg-black/30 backdrop-blur-lg border-r border-white/10">
       <div className="p-6 text-white flex-1">
         <h1 className="text-2xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
           Student Portal

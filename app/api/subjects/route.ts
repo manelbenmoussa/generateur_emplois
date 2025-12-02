@@ -20,12 +20,7 @@ export async function GET(request: NextRequest) {
     if (checkName) {
       // normalize then check DB for case-insensitive match
       const normalized = normalizeSubjectName(checkName) ?? checkName;
-      console.debug(
-        "Subjects GMP checkName=",
-        JSON.stringify(checkName),
-        "normalized=",
-        JSON.stringify(normalized)
-      );
+      // normalized subject check (log removed)
       const matches = await prisma.subject.findMany({
         where: {
           name: { equals: normalized, mode: "insensitive" },
@@ -54,12 +49,7 @@ export async function POST(request: NextRequest) {
     // Normalize name for comparison and storage to avoid invisible char or whitespace duplicates
     const normalized = normalizeSubjectName(name);
     if (normalized) name = normalized;
-    console.debug(
-      "Creating subject; normalized name:",
-      JSON.stringify(name),
-      "raw:",
-      body.name
-    );
+    // creating subject (debug log removed)
     const { hourVolume } = body;
     // Trim name to avoid duplicates caused by trailing/leading spaces
     name = typeof name === "string" ? name.trim() : name;

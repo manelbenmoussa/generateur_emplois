@@ -2,17 +2,22 @@
 
 import { useState, useEffect } from "react";
 
-interface Session {
-  id: number;
-  subject: string;
-  teacher: string;
-  room: string;
-  startTime: string;
-  endTime: string;
-  weekDay: string;
+interface TimetableViewProps {
+  userId?: string;
 }
 
-const weekDays = [
+type StudentSession = {
+  id: number;
+  subject: string | null;
+  teacher: string | null;
+  room: string | null;
+  weekday: string | null; // may come as 'MONDAY' or 'Monday'
+  time: string | null; // e.g. '08:00'
+  duration?: string | null;
+  group?: { id: number; level?: string | null } | null;
+};
+
+const WEEK_DAYS = [
   "Monday",
   "Tuesday",
   "Wednesday",
@@ -20,198 +25,376 @@ const weekDays = [
   "Friday",
   "Saturday",
 ];
-const timeSlots = [
-  "08:00",
-  "09:00",
-  "10:00",
-  "11:00",
-  "12:00",
-  "13:00",
-  "14:00",
-  "15:00",
-  "16:00",
-  "17:00",
-  "18:00",
+const FULL_WEEK = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
 ];
 
-export default function TimetableView() {
-  const [sessions, setSessions] = useState<Session[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [selectedWeek, setSelectedWeek] = useState("current");
+function normalizeDay(raw?: string | null) {
+  if (!raw) return "Unscheduled";
+  const lower = raw.toLowerCase();
+  // try to match to our WEEK_DAYS
+  for (const d of WEEK_DAYS) {
+    if (d.toLowerCase() === lower) return d;
+  }
+  // also accept uppercase like 'MONDAY'
+  const cap = lower.charAt(0).toUpperCase() + lower.slice(1);
+  return cap;
+}
+
+function renderPrintableTimetable(sessions: StudentSession[]) {
+  const times = Array.from(
+    new Set(sessions.map((s) => s.time).filter((t): t is string => !!t))
+  ).sort();
+  const rows = times.length > 0 ? times : ["--"];
+
+  const map = new Map<string, Map<string, StudentSession[]>>();
+  for (const s of sessions) {
+    const day = normalizeDay(s.weekday) ?? "Unscheduled";
+    const time = s.time ?? "--";
+    if (!map.has(day)) map.set(day, new Map());
+    const row = map.get(day)!;
+    if (!row.has(time)) row.set(time, []);
+    row.get(time)!.push(s);
+  }
+
+  let html = `<div style="padding:20px;color:#fff;font-family:Arial,Helvetica,sans-serif;">`;
+  html += `<h2 style="margin-bottom:12px;">My Timetable</h2>`;
+  html += `<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.04);text-align:left">Time</th>`;
+  for (const d of WEEK_DAYS)
+    html += `<th style="padding:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.04);text-align:left">${d}</th>`;
+  html += `</tr></thead><tbody>`;
+
+  for (const time of rows) {
+    html += `<tr><td style="padding:8px;border:1px solid rgba(255,255,255,0.06);vertical-align:top">${
+      time === "--" ? "" : time
+    }</td>`;
+    for (const d of WEEK_DAYS) {
+      const dayRow = map.get(d);
+      const items = dayRow?.get(time) ?? [];
+      html += `<td style="padding:8px;border:1px solid rgba(255,255,255,0.06);vertical-align:top">`;
+      if (items.length === 0) html += `<div style="color:#9ca3af">—</div>`;
+      else {
+        for (const it of items) {
+          html += `<div style="background:linear-gradient(90deg,#1e3a8a,#6d28d9);padding:8px;border-radius:6px;margin-bottom:6px;color:#fff">
+            <div style="font-weight:600">${it.subject ?? "(No subject)"}</div>
+            <div style="font-size:12px;opacity:0.9">${
+              it.teacher ?? "Teacher -"
+            }</div>
+            <div style="font-size:12px;opacity:0.9">${it.room ?? "Room -"}</div>
+          </div>`;
+        }
+      }
+      html += `</td>`;
+    }
+    html += `</tr>`;
+  }
+
+  html += `</tbody></table></div>`;
+  return html;
+}
+
+export default function TimetableView({ userId }: TimetableViewProps) {
+  const [sessions, setSessions] = useState<StudentSession[] | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchTimetable();
-  }, [selectedWeek]);
-
-  const fetchTimetable = async () => {
-    try {
+    async function load() {
       setLoading(true);
-      setError("");
-
-      const response = await fetch(
-        `/api/student/sessions?week=${selectedWeek}`
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch timetable");
+      setError(null);
+      try {
+        // student sessions endpoint relies on the server session
+        const res = await fetch(`/api/student/sessions`);
+        const data = await res.json();
+        if (!res.ok) {
+          setError(data?.error ?? "Failed to load timetable");
+          setSessions([]);
+        } else {
+          // API returns { sessions: [...] }
+          setSessions((data.sessions ?? []) as StudentSession[]);
+        }
+      } catch (err) {
+        setError(err?.message ?? "Network error");
+        setSessions([]);
+      } finally {
+        setLoading(false);
       }
-
-      const data = await response.json();
-      setSessions(data.sessions || []);
-    } catch (error) {
-      console.error("Failed to fetch timetable:", error);
-      setError(
-        error instanceof Error ? error.message : "Failed to load timetable"
-      );
-    } finally {
-      setLoading(false);
     }
-  };
 
-  const getSessionsForDayAndTime = (day: string, time: string) => {
-    return sessions.filter((session) => {
-      return session.weekDay === day && session.startTime === time;
-    });
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-white text-lg">Loading timetable...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-red-500/20 border border-red-500/50 rounded-xl p-6">
-        <p className="text-red-200">{error}</p>
-      </div>
-    );
-  }
+    load();
+  }, [userId]);
 
   return (
-    <>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+    <div>
+      <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-3xl font-bold text-white mb-2">
             📅 Weekly Timetable
           </h2>
-          <p className="text-gray-300">Your complete class schedule</p>
+          {sessions &&
+            sessions.length > 0 &&
+            (() => {
+              const g = sessions.find((s) => s.group && s.group.level)?.group
+                ?.level;
+              return g ? (
+                <div className="text-sm text-gray-300 mt-1">
+                  Group: <span className="text-white font-semibold">{g}</span>
+                </div>
+              ) : null;
+            })()}
         </div>
-        <select
-          value={selectedWeek}
-          onChange={(e) => setSelectedWeek(e.target.value)}
-          className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="current">Current Week</option>
-          <option value="next">Next Week</option>
-        </select>
+        <div>
+          <button
+            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded"
+            onClick={async () => {
+              if (!sessions) return;
+              try {
+                const [{ default: html2canvas }, { jsPDF }] = await Promise.all(
+                  [import("html2canvas"), import("jspdf")]
+                );
+
+                const container = document.createElement("div");
+                container.style.position = "fixed";
+                container.style.left = "-9999px";
+                container.style.top = "0";
+                container.style.width = "1200px";
+                container.innerHTML = renderPrintableTimetable(sessions);
+                document.body.appendChild(container);
+
+                await new Promise((r) => setTimeout(r, 250));
+
+                const canvas = await html2canvas(container as HTMLElement, {
+                  scale: 2,
+                  backgroundColor: "#0b1020",
+                  useCORS: true,
+                });
+
+                const imgData = canvas.toDataURL("image/png");
+
+                const pdf = new jsPDF({
+                  orientation: "landscape",
+                  unit: "pt",
+                  format: "a4",
+                });
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+
+                const imgProps = pdf.getImageProperties(imgData);
+                const imgWidth = imgProps.width;
+                const imgHeight = imgProps.height;
+                const ratio = imgHeight / imgWidth;
+                const renderHeight = pdfWidth * ratio;
+                let remainingHeight = renderHeight;
+                let position = 0;
+
+                if (renderHeight <= pdfHeight) {
+                  pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, renderHeight);
+                } else {
+                  const pageCanvas = document.createElement("canvas");
+                  pageCanvas.width = canvas.width;
+                  pageCanvas.height = Math.floor(
+                    (canvas.width * pdfHeight) / pdfWidth
+                  );
+                  const pageCtx = pageCanvas.getContext("2d")!;
+
+                  while (remainingHeight > 0) {
+                    pageCtx.clearRect(
+                      0,
+                      0,
+                      pageCanvas.width,
+                      pageCanvas.height
+                    );
+                    pageCtx.drawImage(
+                      canvas,
+                      0,
+                      position,
+                      canvas.width,
+                      pageCanvas.height,
+                      0,
+                      0,
+                      pageCanvas.width,
+                      pageCanvas.height
+                    );
+
+                    const pageData = pageCanvas.toDataURL("image/png");
+                    pdf.addImage(pageData, "PNG", 0, 0, pdfWidth, pdfHeight);
+                    remainingHeight -= pdfHeight;
+                    position += pageCanvas.height;
+                    if (remainingHeight > 0) pdf.addPage();
+                  }
+                }
+
+                pdf.save("timetable.pdf");
+                document.body.removeChild(container);
+              } catch (err) {
+                console.error("PDF generation failed", err);
+                const printable = document.createElement("div");
+                printable.innerHTML = renderPrintableTimetable(sessions || []);
+                const w = window.open(
+                  "",
+                  "_blank",
+                  "noopener,noreferrer,width=900,height=700"
+                );
+                if (!w) return;
+                w.document.write(
+                  `<!doctype html><html><head><meta charset="utf-8"><title>Timetable</title><style>body{font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:#0b1020; color:#fff;} .table{width:100%;border-collapse:collapse} .cell{border:1px solid rgba(255,255,255,0.06);padding:10px;vertical-align:top} .header{background:rgba(255,255,255,0.04);font-weight:600} .session{background:linear-gradient(90deg,#1e3a8a,#6d28d9);padding:8px;border-radius:6px}</style></head><body>` +
+                    printable.innerHTML +
+                    `</body></html>`
+                );
+                w.document.close();
+                w.focus();
+                setTimeout(() => {
+                  try {
+                    w.print();
+                  } catch {
+                    /* ignore */
+                  }
+                }, 300);
+              }
+            }}
+          >
+            Download PDF
+          </button>
+        </div>
       </div>
 
-      {/* Timetable Grid */}
       <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[1000px]">
-            <thead>
-              <tr className="bg-white/5 border-b border-white/10">
-                <th className="px-4 py-4 text-left text-sm font-semibold text-white w-24">
-                  Time
-                </th>
-                {weekDays.map((day) => (
-                  <th
-                    key={day}
-                    className="px-4 py-4 text-center text-sm font-semibold text-white"
-                  >
-                    {day}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {timeSlots.map((time) => (
-                <tr
-                  key={time}
-                  className="border-b border-white/5 hover:bg-white/5"
-                >
-                  <td className="px-4 py-3 text-sm font-mono text-gray-300 align-top">
-                    {time}
-                  </td>
-                  {weekDays.map((day) => {
-                    const daySessions = getSessionsForDayAndTime(day, time);
-                    return (
-                      <td
-                        key={`${day}-${time}`}
-                        className="px-2 py-2 align-top"
-                      >
-                        {daySessions.length > 0 ? (
-                          <div className="space-y-1">
-                            {daySessions.map((session) => (
-                              <div
-                                key={session.id}
-                                className="bg-gradient-to-br from-blue-600/80 to-purple-600/80 backdrop-blur-sm border border-white/20 rounded-lg p-3 hover:from-blue-600 hover:to-purple-600 transition-all duration-200 cursor-pointer shadow-lg"
-                              >
-                                <p className="text-white font-semibold text-sm mb-1">
-                                  {session.subject}
-                                </p>
-                                <p className="text-xs text-gray-200 mb-1">
-                                  👨‍🏫 {session.teacher}
-                                </p>
-                                <p className="text-xs text-gray-200 mb-1">
-                                  📍 {session.room}
-                                </p>
-                                <p className="text-xs text-gray-300 font-mono">
-                                  {session.startTime} - {session.endTime}
-                                </p>
+          {loading ? (
+            <div className="p-6 text-white">Loading timetable...</div>
+          ) : error ? (
+            <div className="p-6 text-red-300">{error}</div>
+          ) : sessions && sessions.length === 0 ? (
+            <div className="p-6 text-gray-300">
+              No scheduled sessions found.
+            </div>
+          ) : (
+            <div className="min-w-[800px] p-4">
+              {
+                // render grid
+              }
+              <table className="w-full table-auto text-left text-sm text-white">
+                <thead>
+                  <tr className="bg-white/5 border-b border-white/10">
+                    <th className="px-3 py-2 header">Time</th>
+                    {WEEK_DAYS.map((d) => (
+                      <th key={d} className="px-3 py-2 header">
+                        {d}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {(() => {
+                    const times = Array.from(
+                      new Set(
+                        (sessions || [])
+                          .map((s) => s.time)
+                          .filter((t): t is string => !!t)
+                      )
+                    ).sort();
+                    const rows = times.length > 0 ? times : ["--"];
+
+                    const map = new Map<
+                      string,
+                      Map<string, StudentSession[]>
+                    >();
+                    for (const s of sessions || []) {
+                      const day = normalizeDay(s.weekday) ?? "Unscheduled";
+                      const time = s.time ?? "--";
+                      if (!map.has(day)) map.set(day, new Map());
+                      const row = map.get(day)!;
+                      if (!row.has(time)) row.set(time, []);
+                      row.get(time)!.push(s);
+                    }
+
+                    return rows.map((time) => (
+                      <tr key={time}>
+                        <td className="px-3 py-2 align-top cell">
+                          {time === "--" ? "" : time}
+                        </td>
+                        {WEEK_DAYS.map((d) => {
+                          const dayRow = map.get(d);
+                          const items = dayRow?.get(time) ?? [];
+                          return (
+                            <td key={d} className="px-3 py-2 align-top cell">
+                              <div className="flex flex-col gap-2">
+                                {items.length === 0 ? (
+                                  <div className="text-gray-300">—</div>
+                                ) : (
+                                  items.map((it) => (
+                                    <div
+                                      key={it.id}
+                                      className="session bg-gradient-to-br from-blue-600/80 to-purple-600/80 rounded-lg p-3"
+                                    >
+                                      <div className="font-semibold">
+                                        {it.subject ?? "(No subject)"}
+                                      </div>
+                                      <div className="text-xs text-white/90">
+                                        {it.teacher ?? "Teacher -"}
+                                      </div>
+                                      <div className="text-xs text-white/80">
+                                        {it.room ?? "Room -"}
+                                      </div>
+                                    </div>
+                                  ))
+                                )}
                               </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <div className="h-20"></div>
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ));
+                  })()}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Legend */}
-      <div className="mt-6 flex flex-wrap gap-4 items-center text-sm text-gray-300">
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-gradient-to-br from-blue-600 to-purple-600 rounded"></div>
-          <span>Regular Class</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-gray-600 rounded"></div>
-          <span>Free Period</span>
-        </div>
-      </div>
-
-      {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-4">
           <p className="text-gray-300 text-sm mb-1">Total Classes</p>
-          <p className="text-2xl font-bold text-white">{sessions.length}</p>
+          <p className="text-2xl font-bold text-white">
+            {(sessions || []).length}
+          </p>
         </div>
         <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-4">
           <p className="text-gray-300 text-sm mb-1">Total Hours</p>
           <p className="text-2xl font-bold text-white">
-            {sessions.length * 1}h
+            {(() => {
+              const total = (sessions || []).reduce((sum, s) => {
+                const d = parseFloat(s.duration ?? "");
+                return sum + (isFinite(d) && d > 0 ? d : 1.5);
+              }, 0);
+              // display with one decimal if needed
+              return `${
+                Number.isInteger(total) ? String(total) : total.toFixed(1)
+              }h`;
+            })()}
           </p>
         </div>
         <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-4">
           <p className="text-gray-300 text-sm mb-1">Free Days</p>
           <p className="text-2xl font-bold text-white">
-            {weekDays.length - new Set(sessions.map((s) => s.weekDay)).size}
+            {(() => {
+              const daysWithClasses = new Set(
+                (sessions || [])
+                  .map((s) => normalizeDay(s.weekday))
+                  .filter((d) => FULL_WEEK.includes(d))
+              ).size;
+              return 7 - daysWithClasses;
+            })()}
           </p>
         </div>
       </div>
-    </>
+    </div>
   );
 }

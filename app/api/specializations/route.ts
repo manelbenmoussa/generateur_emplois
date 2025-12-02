@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import * as specializationDao from "@/dao/specializationdao";
+import * as specializationDao from "@/dao/specializationDao";
 import * as departmentDao from "@/dao/departmentDao";
 
 // GET /api/specializations?schoolId=1

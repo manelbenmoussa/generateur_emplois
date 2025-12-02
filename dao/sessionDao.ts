@@ -33,6 +33,33 @@ export async function getSessionsBySchool(schoolId: number) {
   });
 }
 
+/**
+ * Get all sessions assigned to a teacher identified by their User.id
+ */
+export async function getSessionsByTeacherUserId(userId: string) {
+  return await prisma.session.findMany({
+    where: {
+      teacher: {
+        userId,
+      },
+    },
+    include: {
+      subject: true,
+      group: {
+        include: {
+          specialization: {
+            include: { department: true },
+          },
+        },
+      },
+      teacher: {
+        include: { user: true },
+      },
+      room: true,
+    },
+  });
+}
+
 // --- CRUD ---
 export type SessionInput = {
   subjectId: number;

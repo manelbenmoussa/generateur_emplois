@@ -55,13 +55,20 @@ export async function POST(request: Request) {
       });
     }
 
-    return NextResponse.json(
+    // Set a short-lived cookie so middleware can accept the updated role
+    // during the immediate redirect/navigation that follows role confirmation.
+    const res = NextResponse.json(
       {
         message: "Role confirmed",
         user: { id: updated.id, role: updated.role },
       },
       { status: 200 }
     );
+
+    const cookieOptions = [`Path=/`, `Max-Age=10`, `SameSite=Lax`];
+    if (process.env.NODE_ENV === "production") cookieOptions.push("Secure");
+    res.headers.set("Set-Cookie", `roleUpdated=1; ${cookieOptions.join("; ")}`);
+    return res;
   } catch (error) {
     console.error("Confirm role error:", error);
     return NextResponse.json(

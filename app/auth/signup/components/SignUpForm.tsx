@@ -57,12 +57,10 @@ export default function SignUpForm() {
 
   const fetchSchools = async () => {
     try {
-      console.log("Fetching schools...");
+      // fetching schools (logs removed)
       const response = await fetch("/api/schools");
-      console.log("Response status:", response.status);
       if (response.ok) {
         const data = await response.json();
-        console.log("Schools data:", data);
         setSchools(data);
         setFilteredSchools(data);
       } else {

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/dao/db";
+const p = prisma as any;
 
 // GET /api/student/exams
 export async function GET(request: Request) {
@@ -25,7 +26,7 @@ export async function GET(request: Request) {
     }
 
     // Get exams for student's group
-    const exams = await prisma.exam.findMany({
+    const exams = await p.exam.findMany({
       where: {
         groupId: student.groupId,
       },

@@ -1,53 +1,71 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 // Logout is available on the home page; settings view does not include logout
 
-interface SettingsViewProps {
-  userId?: string;
-}
-
-export default function SettingsView({ userId }: SettingsViewProps) {
+export default function SettingsView() {
   // router not needed since logout is removed from this view
   const [profile, setProfile] = useState({
     name: "",
     email: "",
-    phone: "",
-  });
-
-  const [preferences, setPreferences] = useState({
-    emailNotifications: true,
-    smsNotifications: false,
-    language: "en",
+    groupId: null as number | null,
   });
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [groups, setGroups] = useState<Array<{ id: number; level: string }>>(
+    []
+  );
+  type GroupDto = { id: number; level?: string | null; name?: string | null };
 
-  useEffect(() => {
-    fetchProfile();
+  const fetchGroups = useCallback(async (schoolId: number) => {
+    try {
+      const resp = await fetch(`/api/groups?schoolId=${schoolId}`);
+      if (!resp.ok) return;
+      const data = (await resp.json()) as GroupDto[];
+      // data is an array of groups
+      setGroups(
+        (data || []).map((g) => ({ id: g.id, level: g.level || g.name || String(g.id) }))
+      );
+    } catch (err) {
+      console.error("Failed to fetch groups:", err);
+    }
   }, []);
 
-  const fetchProfile = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch("/api/student/profile");
-      const data = await response.json();
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/student/profile");
+        const data = await response.json();
 
-      if (data.profile) {
-        setProfile({
-          name: data.profile.name || "",
-          email: data.profile.email || "",
-          phone: "",
-        });
+        if (!mounted) return;
+        if (data.profile) {
+          setProfile({
+            name: data.profile.name || "",
+            email: data.profile.email || "",
+            groupId: data.profile.groupId ?? null,
+          });
+
+          // If we have a schoolId, fetch groups for selection
+          if (data.profile.schoolId) {
+            fetchGroups(data.profile.schoolId);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch profile:", err);
+      } finally {
+        if (mounted) setLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to fetch profile:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, [fetchGroups]);
 
   const handleSaveProfile = async () => {
     try {
@@ -59,7 +77,7 @@ export default function SettingsView({ userId }: SettingsViewProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: profile.name,
-          phone: profile.phone,
+          groupId: profile.groupId,
         }),
       });
 
@@ -67,7 +85,7 @@ export default function SettingsView({ userId }: SettingsViewProps) {
         setMessage("Profile updated successfully!");
         setTimeout(() => setMessage(""), 3000);
       }
-    } catch (error) {
+    } catch {
       setMessage("Failed to update profile");
     } finally {
       setSaving(false);
@@ -90,7 +108,7 @@ export default function SettingsView({ userId }: SettingsViewProps) {
         <h2 className="text-3xl font-bold text-white mb-2">
           Settings & Profile ⚙️
         </h2>
-        <p className="text-gray-300">Manage your account and preferences</p>
+        <p className="text-gray-300">Manage your account</p>
       </div>
 
       {message && (
@@ -99,9 +117,9 @@ export default function SettingsView({ userId }: SettingsViewProps) {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Profile Settings */}
-        <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6">
+      <div className="grid grid-cols-1 gap-6">
+        {/* Profile Settings (only) */}
+        <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6 max-w-2xl">
           <h3 className="text-xl font-semibold text-white mb-4">
             Profile Information
           </h3>
@@ -136,17 +154,25 @@ export default function SettingsView({ userId }: SettingsViewProps) {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Phone
+                Group
               </label>
-              <input
-                type="tel"
-                value={profile.phone}
+              <select
+                value={profile.groupId ?? ""}
                 onChange={(e) =>
-                  setProfile({ ...profile, phone: e.target.value })
+                  setProfile({
+                    ...profile,
+                    groupId: e.target.value ? Number(e.target.value) : null,
+                  })
                 }
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="+1 234 567 8900"
-              />
+              >
+                <option value="">No group</option>
+                {groups.map((g) => (
+                  <option key={g.id} value={g.id} className="bg-gray-900">
+                    {g.level}
+                  </option>
+                ))}
+              </select>
             </div>
             <button
               onClick={handleSaveProfile}
@@ -155,85 +181,6 @@ export default function SettingsView({ userId }: SettingsViewProps) {
             >
               {saving ? "Saving..." : "Save Changes"}
             </button>
-          </div>
-        </div>
-
-        {/* Preferences */}
-        <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6">
-          <h3 className="text-xl font-semibold text-white mb-4">Preferences</h3>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-white font-medium">Email Notifications</p>
-                <p className="text-sm text-gray-400">
-                  Receive updates via email
-                </p>
-              </div>
-              <button
-                onClick={() =>
-                  setPreferences({
-                    ...preferences,
-                    emailNotifications: !preferences.emailNotifications,
-                  })
-                }
-                className={`relative w-12 h-6 rounded-full transition-colors ${
-                  preferences.emailNotifications ? "bg-blue-600" : "bg-gray-600"
-                }`}
-              >
-                <span
-                  className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                    preferences.emailNotifications ? "translate-x-6" : ""
-                  }`}
-                />
-              </button>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-white font-medium">SMS Notifications</p>
-                <p className="text-sm text-gray-400">Receive updates via SMS</p>
-              </div>
-              <button
-                onClick={() =>
-                  setPreferences({
-                    ...preferences,
-                    smsNotifications: !preferences.smsNotifications,
-                  })
-                }
-                className={`relative w-12 h-6 rounded-full transition-colors ${
-                  preferences.smsNotifications ? "bg-blue-600" : "bg-gray-600"
-                }`}
-              >
-                <span
-                  className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                    preferences.smsNotifications ? "translate-x-6" : ""
-                  }`}
-                />
-              </button>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Language
-              </label>
-              <select
-                value={preferences.language}
-                onChange={(e) =>
-                  setPreferences({ ...preferences, language: e.target.value })
-                }
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="en" className="bg-gray-900">
-                  English
-                </option>
-                <option value="fr" className="bg-gray-900">
-                  Français
-                </option>
-                <option value="ar" className="bg-gray-900">
-                  العربية
-                </option>
-              </select>
-            </div>
           </div>
         </div>
       </div>

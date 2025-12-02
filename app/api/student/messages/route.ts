@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/dao/db";
+const p = prisma as any;
 
 // GET /api/student/messages
 export async function GET(request: Request) {
@@ -14,7 +15,7 @@ export async function GET(request: Request) {
 
     const userId = session.user.id;
 
-    const messages = await prisma.message.findMany({
+    const messages = await p.message.findMany({
       where: {
         OR: [
           { recipientId: userId },
@@ -53,7 +54,7 @@ export async function PUT(request: Request) {
 
     const { id } = await request.json();
 
-    await prisma.message.update({
+    await p.message.update({
       where: { id: Number(id) },
       data: { isRead: true },
     });

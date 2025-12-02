@@ -28,7 +28,7 @@ interface Session {
   time: string;
 }
 
-export default function AvailabilityView({ userId }: AvailabilityViewProps) {
+export default function AvailabilityView({}: AvailabilityViewProps) {
   const [requests, setRequests] = useState<SwapRequest[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -1,21 +1,25 @@
+"use client";
+
 import React from "react";
 import type { RawSession } from "../SessionsCRUD";
 
-interface SessionTableProps {
+type Props = {
   sessions: RawSession[];
-  onEdit: (session: RawSession) => void;
+  onEdit: (s: RawSession) => void;
   onDelete: (id: number) => void;
-  scheduled?: boolean;
-}
+  renderGroupName: (s: RawSession) => string;
+  showSchedule?: boolean;
+};
 
 export default function SessionTable({
   sessions,
   onEdit,
   onDelete,
-  scheduled,
-}: SessionTableProps) {
+  renderGroupName,
+  showSchedule = true,
+}: Props) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-white/10 mb-10">
+    <div className="overflow-x-auto rounded-lg border border-white/10">
       <table className="min-w-full divide-y divide-white/10">
         <thead className="bg-black/30">
           <tr>
@@ -28,7 +32,7 @@ export default function SessionTable({
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
               Teacher
             </th>
-            {scheduled && (
+            {showSchedule && (
               <>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                   Weekday
@@ -45,16 +49,16 @@ export default function SessionTable({
           {sessions.map((s) => (
             <tr key={s.id} className="hover:bg-white/10 transition">
               <td className="px-4 py-3 text-sm text-gray-200 whitespace-nowrap">
-                {s.group?.specialization?.name} {s.group?.level}
+                {renderGroupName(s)}
               </td>
               <td className="px-4 py-3 text-sm text-gray-200">
                 {s.subject?.name ?? `#${s.subjectId}`}
               </td>
               <td className="px-4 py-3 text-sm text-gray-200">
                 {s.teacher?.user?.name ??
-                  (scheduled ? `T${s.teacher?.id ?? ""}` : "-")}
+                  (showSchedule ? `T${s.teacher?.id ?? ""}` : "-")}
               </td>
-              {scheduled && (
+              {showSchedule && (
                 <>
                   <td className="px-4 py-3 text-sm text-gray-200">
                     {s.scheduled_weekday}

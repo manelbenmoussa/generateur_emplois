@@ -14,11 +14,8 @@ export async function GET() {
     // 1. Show raw session data from the database before DTO mapping
     const sessionDao = await import("@/dao/sessionDao");
     const rawSessions = await sessionDao.getSessionsBySchool(schoolId);
-    // keep for debugging but avoid "assigned but never used" linter error
-    console.debug(
-      "rawSessions sample:",
-      rawSessions?.slice?.(0, 3) ?? rawSessions
-    );
+    // rawSessions preserved for local inspection; avoid unused-var lint
+    void rawSessions;
 
     // 2. Get the clean, flat data from the database (DTO mapping)
     const flatData = await assembleAllEntitiesForSchool(schoolId);
@@ -48,7 +45,7 @@ export async function GET() {
     }
     const { assignments } = await response.json();
 
-    console.log({ assignments });
+    // assignments received from python service (logs removed)
 
     // 3a. Persist assignments -> update each session in DB with scheduled weekday & time
     try {
@@ -85,7 +82,8 @@ export async function GET() {
           })
         );
       const results = await Promise.all(updateTasks);
-      console.log("Persisted assignments count:", results.length);
+      // persisted assignment count: results.length (log removed)
+      void results;
     } catch (err) {
       console.error("Failed to persist assignments to DB:", err);
       // allow the flow to continue; we still attempt to create the PDF preview

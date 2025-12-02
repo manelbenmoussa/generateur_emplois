@@ -77,16 +77,11 @@ export async function POST(request: Request) {
           },
         });
 
-        // Log what we'll insert for the role record to help debug unique constraint issues
-        console.log("Creating role record:", {
-          userRole,
-          userId: user.id,
-          schoolId: schoolIdNum,
-        });
+        // role record creation (debug logs removed)
 
         // Create corresponding role record
         if (userRole === "ADMIN") {
-          console.log("Creating administrator record for user", user.id);
+          // creating administrator record
           await tx.administrator.create({
             data: {
               userId: user.id,
@@ -94,7 +89,7 @@ export async function POST(request: Request) {
             },
           });
         } else if (userRole === "TEACHER") {
-          console.log("Creating teacher record for user", user.id);
+          // creating teacher record
           await tx.teacher.create({
             data: {
               userId: user.id,
@@ -102,7 +97,7 @@ export async function POST(request: Request) {
             },
           });
         } else if (userRole === "STUDENT") {
-          console.log("Creating student record for user", user.id);
+          // creating student record
           await tx.student.create({
             data: {
               userId: user.id,
@@ -143,7 +138,7 @@ export async function POST(request: Request) {
         const maxId = (maxRes && maxRes[0] && Number(maxRes[0].max_id)) || 0;
 
         const nextVal = maxId + 1;
-        console.log("Resetting Teacher id sequence to", nextVal);
+        // resetting Teacher id sequence (log removed)
 
         // Reset sequence using pg_get_serial_sequence; this will set the sequence
         // so the next nextval() returns nextVal.

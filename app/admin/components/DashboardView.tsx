@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import SessionsCRUD from "./SessionsCRUD";
 
 interface DashboardViewProps {
@@ -20,6 +23,25 @@ export default function DashboardView({
   userName,
   onNavigate,
 }: DashboardViewProps) {
+  const [stats, setStats] = useState<{
+    teachers?: number;
+    students?: number;
+    scheduledSessions?: number;
+  }>({});
+
+  useEffect(() => {
+    let mounted = true;
+    fetch("/api/admin/stats")
+      .then((r) => r.json())
+      .then((data) => {
+        if (!mounted) return;
+        if (data && !data.error) setStats(data);
+      })
+      .catch((err) => console.error("Failed to load admin stats", err));
+    return () => {
+      mounted = false;
+    };
+  }, []);
   return (
     <>
       <div className="mb-6">
@@ -216,48 +238,28 @@ export default function DashboardView({
         </button>
       </div>
 
-      <div className="details-section">
-        <h3>System Features</h3>
-        <div className="details-grid">
-          <div className="detail-item">
-            <h4>Automated Scheduling</h4>
-            <p>
-              Our smart algorithm handles conflict-free timetable generation
-              automatically
-            </p>
-          </div>
-          <div className="detail-item">
-            <h4>Real-time Updates</h4>
-            <p>
-              Changes to rooms or teachers are reflected instantly across all
-              schedules
-            </p>
-          </div>
-          <div className="detail-item">
-            <h4>Resource Optimization</h4>
-            <p>Maximize room utilization and minimize teacher idle time</p>
-          </div>
-          <div className="detail-item">
-            <h4>Conflict Detection</h4>
-            <p>
-              Automatic validation prevents scheduling conflicts and overlaps
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* System Features removed per request. */}
 
       <div className="stats-section">
         <div className="stat-card">
           <h4>Active Teachers</h4>
-          <p className="count">—</p>
+          <p className="count">
+            {typeof stats.teachers === "number" ? stats.teachers : "—"}
+          </p>
         </div>
         <div className="stat-card">
           <h4>Total Students</h4>
-          <p className="count">—</p>
+          <p className="count">
+            {typeof stats.students === "number" ? stats.students : "—"}
+          </p>
         </div>
         <div className="stat-card">
           <h4>Scheduled Sessions</h4>
-          <p className="count">—</p>
+          <p className="count">
+            {typeof stats.scheduledSessions === "number"
+              ? stats.scheduledSessions
+              : "—"}
+          </p>
         </div>
       </div>
 

@@ -122,12 +122,12 @@ export default function HomePage() {
             <div className="flex gap-4 justify-center">
               {session.user?.role === "ADMIN" && (
                 <>
-                  <Link
-                    href="/admin"
+                  <button
+                    onClick={() => router.push("/admin")}
                     className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                   >
                     Go to Admin Dashboard
-                  </Link>
+                  </button>
                 </>
               )}
               {session.user?.role === "TEACHER" && (
