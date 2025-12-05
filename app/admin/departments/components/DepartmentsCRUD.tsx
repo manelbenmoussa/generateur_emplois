@@ -58,7 +58,10 @@ export default function DepartmentsCRUD() {
     if (!formName) return alert("Name required");
 
     try {
-      const payload = { name: formName, schoolId } as any;
+      const payload: { name: string; schoolId: number } = {
+        name: formName,
+        schoolId,
+      };
       let res: Response;
       if (editing) {
         res = await fetch(`/api/departments`, {

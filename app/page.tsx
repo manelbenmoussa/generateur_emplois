@@ -58,7 +58,7 @@ export default function HomePage() {
             <div className="flex items-center gap-2">
               <span className="text-2xl"></span>
               <h1 className="text-xl font-bold text-white">
-                Timetable Generator
+                Timetable Manager
               </h1>
             </div>
             <div className="flex items-center gap-4">
@@ -112,11 +112,12 @@ export default function HomePage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 flex-1">
         <div className="text-center mb-12">
           <h1 className="text-6xl font-extrabold text-white mb-6">
-            Timetable Generator
+            Timetable Manager
           </h1>
           <p className="text-xl text-gray-200 max-w-3xl mx-auto mb-8">
             Automatically generate optimized schedules for schools and
             universities.
+            
           </p>
           {session ? (
             <div className="flex gap-4 justify-center">

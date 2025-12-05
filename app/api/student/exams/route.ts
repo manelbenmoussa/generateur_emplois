@@ -2,10 +2,12 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/dao/db";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const p = prisma as any;
 
 // GET /api/student/exams
-export async function GET(request: Request) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function GET(_request: Request) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -44,6 +46,7 @@ export async function GET(request: Request) {
       },
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formattedExams = exams.map((exam: any) => ({
       id: exam.id,
       title: exam.title,

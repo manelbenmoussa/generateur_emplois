@@ -37,23 +37,132 @@ jest.mock("@/dao/db", () => ({
   },
 }));
 
-import { GET } from "@/app/api/subjects/route";
+import { GET, POST, PUT, DELETE } from "@/app/api/subjects/route";
 
 describe("GET /api/subjects", () => {
   test("returns a NextResponse JSON with subjects or an array", async () => {
     // The route only needs an object with a `url` property for this test.
-    // Creating a full WHATWG `Request` isn't necessary and isn't available
-    // in the Node test environment by default.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const req = { url: "http://localhost/api/subjects" } as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res: any = await GET(req);
-    // The route returns a NextResponse or throws — assert it has json method
     expect(res).toBeDefined();
     if (typeof res.json === "function") {
       const body = await res.json();
-      // body could be an array or object depending on route implementation
       expect(body).toBeDefined();
     }
+  });
+
+  test("returns empty array when no subjects exist", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const req = { url: "http://localhost/api/subjects" } as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const res: any = await GET(req);
+    const body = await res.json();
+    // The mock returns [] for findMany
+    expect(Array.isArray(body)).toBe(true);
+    expect(body.length).toBe(0);
+  });
+
+  test("supports checkName query param for duplicate check", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const req = { url: "http://localhost/api/subjects?checkName=Math" } as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const res: any = await GET(req);
+    const body = await res.json();
+    // Should return { matches: [...] } when checkName is provided
+    expect(body).toHaveProperty("matches");
+  });
+});
+
+describe("POST /api/subjects", () => {
+  test("returns 400 when name is missing", async () => {
+    const req = {
+      url: "http://localhost/api/subjects",
+      json: async () => ({ hourVolume: 2 }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const res: any = await POST(req);
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.fieldErrors).toBeDefined();
+    expect(body.fieldErrors.name).toBeDefined();
+  });
+
+  test("returns 400 when hourVolume is missing", async () => {
+    const req = {
+      url: "http://localhost/api/subjects",
+      json: async () => ({ name: "Physics" }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const res: any = await POST(req);
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.fieldErrors).toBeDefined();
+    expect(body.fieldErrors.hourVolume).toBeDefined();
+  });
+
+  test("returns 400 when hourVolume is not a positive number", async () => {
+    const req = {
+      url: "http://localhost/api/subjects",
+      json: async () => ({ name: "Physics", hourVolume: -5 }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const res: any = await POST(req);
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.fieldErrors.hourVolume).toBeDefined();
+  });
+
+  test("creates a subject successfully with valid data", async () => {
+    const req = {
+      url: "http://localhost/api/subjects",
+      json: async () => ({ name: "Chemistry", hourVolume: 3 }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const res: any = await POST(req);
+    expect(res.status).toBe(201);
+    const body = await res.json();
+    expect(body.id).toBeDefined();
+  });
+});
+
+describe("PUT /api/subjects", () => {
+  test("returns 400 when id is missing", async () => {
+    const req = {
+      url: "http://localhost/api/subjects",
+      json: async () => ({ name: "Biology", hourVolume: 2 }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const res: any = await PUT(req);
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.error).toContain("id");
+  });
+});
+
+describe("DELETE /api/subjects", () => {
+  test("returns 400 when id query param is missing", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const req = { url: "http://localhost/api/subjects" } as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const res: any = await DELETE(req);
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.error).toContain("id");
+  });
+
+  test("returns 404 when subject does not exist", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const req = { url: "http://localhost/api/subjects?id=999" } as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const res: any = await DELETE(req);
+    // The mock returns null for findUnique, so route should return 404
+    expect(res.status).toBe(404);
   });
 });

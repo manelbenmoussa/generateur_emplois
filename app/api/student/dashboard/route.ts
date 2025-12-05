@@ -4,7 +4,8 @@ import { authOptions } from "@/lib/auth";
 import prisma from "@/dao/db";
 
 // GET /api/student/dashboard
-export async function GET(request: Request) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function GET(_request: Request) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -82,6 +83,7 @@ export async function GET(request: Request) {
     });
 
     // Calculate stats
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const totalHours = allSessions.reduce((sum: number, session: any) => {
       return sum + parseFloat(session.subject.hourVolume.toString());
     }, 0);
@@ -97,6 +99,7 @@ export async function GET(request: Request) {
     };
 
     // Format today's sessions
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formattedSessions = todaySessions.map((session: any) => ({
       id: session.id,
       time: session.scheduled_time || "TBD",

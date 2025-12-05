@@ -9,7 +9,7 @@ type Profile = {
 };
 
 export default function AdminProfile() {
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +53,7 @@ export default function AdminProfile() {
 
     setSaving(true);
     try {
-      const body: any = { name, email };
+      const body: Record<string, string> = { name, email };
       if (password) body.password = password;
 
       const res = await fetch("/api/admin/profile", {
@@ -106,7 +106,9 @@ export default function AdminProfile() {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-200 mb-1">New password</label>
+            <label className="block text-sm text-gray-200 mb-1">
+              New password
+            </label>
             <input
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -117,7 +119,9 @@ export default function AdminProfile() {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-200 mb-1">Confirm password</label>
+            <label className="block text-sm text-gray-200 mb-1">
+              Confirm password
+            </label>
             <input
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
